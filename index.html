@@ -587,7 +587,7 @@ section{
 
 /* STATS */
 .stats-section{
-  background:var(--white);
+  background:var(--blue);
   padding:80px 5%;
   position:relative;
   overflow:hidden;
@@ -628,14 +628,14 @@ section{
   font-family:'Lora',serif;
   font-size:3.2rem;
   font-weight:600;
-  color:var(--dark);
+  color:white;
   display:block;
   line-height:1;
   margin-bottom:10px;
 }
 .stat-l{
   font-size:0.75rem;
-  color:var(--text-mid);
+  color:rgba(255,255,255,0.65);
   text-transform:uppercase;
   letter-spacing:1.5px;
   font-weight:500;
@@ -1655,6 +1655,9 @@ footer a:hover{color:white;}
     }
 
     /* ---- STATS ---- */
+    [data-theme="dark"] .stats-section {
+      background: #070b12 !important;
+    }
     [data-theme="dark"] .stats-inner {
       background: rgba(255,255,255,0.02) !important;
       border: 1px solid rgba(255,255,255,0.06) !important;
