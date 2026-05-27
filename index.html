@@ -836,16 +836,16 @@ section{
   box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s, border-color 0.7s, opacity 0.7s, z-index 0.7s step-end;
+  transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.9s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.9s, opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1);
   position: absolute;
   top: 50%;
   left: 50%;
   width: 90%;
   max-width: 580px;
-  transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   opacity: 0;
   overflow: hidden;
-  will-change: transform, opacity;
+  will-change: transform, opacity, box-shadow;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -864,39 +864,39 @@ section{
 
 /* CAROUSEL STATES */
 .proof-card.active {
-  transform: translate3d(-50%, -50%, 0) scale(1);
+  transform: translate3d(-50%, -50%, 0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   opacity: 1;
   z-index: 3;
   border-color: rgba(26, 110, 255, 0.3);
   box-shadow: 0 40px 100px rgba(26, 110, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 40px rgba(26, 110, 255, 0.1);
 }
 .proof-card.prev {
-  transform: translate3d(-80%, -50%, -100px) scale(0.85) rotateY(15deg);
-  opacity: 0.5;
+  transform: translate3d(-90%, -46%, -180px) scale(0.8) rotateY(25deg) rotateZ(-2deg);
+  opacity: 0.4;
   z-index: 2;
   cursor: pointer;
 }
 .proof-card.prev:hover {
   opacity: 0.8;
-  transform: translate3d(-82%, -50%, -80px) scale(0.88) rotateY(10deg);
+  transform: translate3d(-92%, -48%, -150px) scale(0.82) rotateY(20deg) rotateZ(-1deg);
 }
 .proof-card.next {
-  transform: translate3d(-20%, -50%, -100px) scale(0.85) rotateY(-15deg);
-  opacity: 0.5;
+  transform: translate3d(-10%, -46%, -180px) scale(0.8) rotateY(-25deg) rotateZ(2deg);
+  opacity: 0.4;
   z-index: 2;
   cursor: pointer;
 }
 .proof-card.next:hover {
   opacity: 0.8;
-  transform: translate3d(-18%, -50%, -80px) scale(0.88) rotateY(-10deg);
+  transform: translate3d(-8%, -48%, -150px) scale(0.82) rotateY(-20deg) rotateZ(1deg);
 }
 .proof-card.hidden-prev {
-  transform: translate3d(-100%, -50%, -250px) scale(0.7) rotateY(25deg);
+  transform: translate3d(-130%, -40%, -400px) scale(0.5) rotateY(45deg) rotateZ(-4deg);
   opacity: 0;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translate3d(0%, -50%, -250px) scale(0.7) rotateY(-25deg);
+  transform: translate3d(30%, -40%, -400px) scale(0.5) rotateY(-45deg) rotateZ(4deg);
   opacity: 0;
   z-index: 1;
 }
@@ -941,8 +941,8 @@ section{
 @media (max-width: 768px) {
   .proof-carousel-container { height: 420px; }
   .proof-card { padding: 30px; }
-  .proof-card.prev { transform: translate3d(-70%, -50%, -100px) scale(0.8) rotateY(10deg); }
-  .proof-card.next { transform: translate3d(-30%, -50%, -100px) scale(0.8) rotateY(-10deg); }
+  .proof-card.prev { transform: translate3d(-75%, -48%, -150px) scale(0.8) rotateY(15deg) rotateZ(-1deg); }
+  .proof-card.next { transform: translate3d(-25%, -48%, -150px) scale(0.8) rotateY(-15deg) rotateZ(1deg); }
 }
 .proof-quote {
   font-size: 1.15rem;
