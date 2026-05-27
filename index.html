@@ -1030,6 +1030,7 @@ section{
   position: relative;
   z-index: 5;
   display: flex;
+  align-items: center;
 }
 .marquee-content {
   display: flex;
@@ -1793,6 +1794,69 @@ footer a:hover{color:white;}
       border-top: 1px solid rgba(255,255,255,0.04) !important;
     }
 
+    /* ---- WHATSAPP POPUP ---- */
+    .wa-popup {
+      position: fixed;
+      bottom: -100px; /* Hidden initially */
+      left: 20px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      max-width: 320px;
+    }
+    .wa-popup.show {
+      bottom: 20px;
+      opacity: 1;
+    }
+    .wa-icon {
+      background: #25D366;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .wa-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+    .wa-desc {
+      font-size: 0.7rem;
+      color: var(--text-mid);
+    }
+    [data-theme="dark"] .wa-popup {
+      background: #111827 !important;
+      border-color: rgba(255,255,255,0.06) !important;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    }
+    [data-theme="dark"] .wa-title { color: #fff !important; }
+
+    @media(max-width: 640px) {
+      .wa-popup {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -100px;
+        width: 90%;
+      }
+      .wa-popup.show {
+        bottom: 20px;
+      }
+    }
+
     /* ---- THEME TOGGLE BUTTON ---- */
     .theme-toggle {
       position: fixed;
@@ -1898,7 +1962,7 @@ footer a:hover{color:white;}
     </span>
     Michel Radwan
   </div>
-  <a href="https://instagram.com/michelradwan" target="_blank" class="nav-cta">Falar no Instagram</a>
+  <a href="https://wa.me/5511932609424" target="_blank" class="nav-cta">Falar no WhatsApp</a>
 </nav>
 
 <!-- HERO -->
@@ -1908,7 +1972,7 @@ footer a:hover{color:white;}
     <h1>Seu negócio existe.<br>Mas o Google <em class="typewriter-text">sabe disso?</em></h1>
     <p class="hero-sub">Enquanto você serve seus clientes com todo o cuidado do mundo, seus concorrentes estão sendo encontrados por centenas de pessoas prontas para comprar. E você não aparece em lugar nenhum.</p>
     <div class="hero-actions">
-      <a href="https://instagram.com/michelradwan" target="_blank" class="btn-blue">Quero meu site agora</a>
+      <a href="https://wa.me/5511932609424" target="_blank" class="btn-blue">Quero meu site agora</a>
       <a href="#por-que" class="btn-ghost">
         Ver como funciona
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -2678,7 +2742,7 @@ footer a:hover{color:white;}
     <div class="section-label" style="justify-content:center;margin-bottom:1.5rem;">Vamos começar</div>
     <h2>Cada dia sem site é receita<br>entregue ao seu <em>concorrente.</em></h2>
     <p>Você já provou que sabe fazer o seu trabalho com excelência. Agora deixa eu cuidar de fazer o mundo inteiro descobrir isso.</p>
-    <a href="https://instagram.com/michelradwan" target="_blank" class="btn-blue">Falar com Michel agora</a>
+    <a href="https://wa.me/5511932609424" target="_blank" class="btn-blue">Falar com Michel agora</a>
     <div class="cta-features">
       <span class="cta-feat">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2710,7 +2774,7 @@ footer a:hover{color:white;}
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let W,H,particles=[];
-  const COUNT = window.innerWidth < 640 ? 80 : 160;
+  const COUNT = window.innerWidth < 640 ? 30 : 60;
 
   function resize(){
     W = canvas.width = window.innerWidth;
@@ -2722,7 +2786,7 @@ footer a:hover{color:white;}
   function Particle(){
     this.x = Math.random()*W;
     this.y = Math.random()*H;
-    this.r = Math.random()*2.5+0.6;
+    this.r = Math.random()*1.5+0.4;
     this.vx = (Math.random()-0.5)*0.35;
     this.vy = (Math.random()-0.5)*0.35;
     this.alpha = Math.random()*0.55+0.12;
@@ -3177,6 +3241,50 @@ document.head.appendChild(styleEl);
     });
   });
 
+// WHATSAPP POPUPS
+(function(){
+  const popup = document.getElementById('wa-notification');
+  const descEl = document.getElementById('wa-desc');
+  if(!popup) return;
+
+  const messages = [
+    "Alguém de São Paulo acabou de clicar no WhatsApp",
+    "Novo agendamento recebido pelo site",
+    "Cliente de Minas Gerais solicitou orçamento",
+    "Mais uma venda fechada via site",
+    "Alguém está visualizando o portfólio",
+    "Novo contato recebido"
+  ];
+
+  function triggerPopup() {
+    // Pick random message
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    descEl.textContent = msg;
+    
+    // Show popup
+    popup.classList.add('show');
+    
+    // Hide after 4 seconds
+    setTimeout(() => {
+      popup.classList.remove('show');
+    }, 4000);
+  }
+
+  // Random triggers between 15s and 35s
+  function loopPopups() {
+    const delay = Math.floor(Math.random() * (35000 - 15000 + 1)) + 15000;
+    setTimeout(() => {
+      triggerPopup();
+      loopPopups();
+    }, delay);
+  }
+
+  // First popup after 8 seconds
+  setTimeout(() => {
+    triggerPopup();
+    loopPopups();
+  }, 8000);
+})();
 </script>
 
   <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
