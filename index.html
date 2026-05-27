@@ -543,7 +543,11 @@ section{
   margin:0 auto;
   align-items:center;
 }
-@media(max-width:768px){.pain-grid{grid-template-columns:1fr;gap:40px;}}
+@media(max-width:768px){
+  .pain-grid{grid-template-columns:1fr;gap:40px;}
+  .pain-left{text-align:center;}
+  .pain-left .section-label{justify-content:center;}
+}
 .pain-left h2{
   font-family:'Lora',serif;
   font-size:clamp(1.9rem,4vw,3rem);
@@ -695,7 +699,12 @@ section{
   margin:0 auto;
   align-items:center;
 }
-@media(max-width:768px){.why-grid{grid-template-columns:1fr;gap:40px;}}
+@media(max-width:768px){
+  .why-grid{grid-template-columns:1fr;gap:40px;}
+  .why-left{text-align:center;}
+  .why-left .section-label{justify-content:center;}
+  .why-list{align-items:center;}
+}
 .why-left h2{
   font-family:'Lora',serif;
   font-size:clamp(2rem,4vw,3rem);
