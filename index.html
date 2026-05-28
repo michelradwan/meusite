@@ -637,6 +637,12 @@ section{
   line-height:1;
   margin-bottom:10px;
 }
+.stat-block:hover .stat-n {
+  background: radial-gradient(circle 100px at var(--numX, 50%) var(--numY, 50%), #ffffff 0%, rgba(255,255,255,0.2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
 .stat-l{
   font-size:0.75rem;
   color:rgba(255,255,255,0.65);
@@ -3362,6 +3368,15 @@ document.addEventListener('DOMContentLoaded', () => {
       
       card.style.setProperty('--mouseX', `${x}px`);
       card.style.setProperty('--mouseY', `${y}px`);
+      
+      if (card.classList.contains('stat-block')) {
+        const num = card.querySelector('.stat-n');
+        if (num) {
+          const numRect = num.getBoundingClientRect();
+          num.style.setProperty('--numX', `${e.clientX - numRect.left}px`);
+          num.style.setProperty('--numY', `${e.clientY - numRect.top}px`);
+        }
+      }
       
       let baseTransform = '';
       if (card.classList.contains('proof-card')) {
