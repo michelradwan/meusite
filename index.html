@@ -3328,7 +3328,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 3. 3D TILT CARDS
-  const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block, .process-step, .included-item, .faq-item, .proof-card, .portfolio-item');
+  const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block, .included-item, .faq-item, .proof-card, .portfolio-item');
   tiltCards.forEach(card => {
     // Preserve any existing transitions but ensure transform is smooth for tilt
     const baseTransition = window.getComputedStyle(card).transition;
