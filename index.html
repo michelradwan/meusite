@@ -821,9 +821,13 @@ section{
   color: var(--dark);
 }
 .proof-header h2 em {
-  color: var(--blue);
+  /* Override the global em shimmer — keep solid blue text here */
+  color: var(--blue) !important;
   font-style: italic;
   font-weight: 400;
+  background-image: none !important;
+  -webkit-text-fill-color: var(--blue) !important;
+  animation: none !important;
 }
 .proof-header p {
   font-size: 1.05rem;
@@ -866,18 +870,21 @@ section{
   box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
-  transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.9s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.9s, opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1);
   position: absolute;
   top: 50%;
   left: 50%;
   width: 90%;
   max-width: 580px;
-  transform: translate3d(-50%, -50%, 0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  /* Default: off-screen hidden (JS will assign active/prev/next classes) */
+  transform: translate3d(30%, -40%, -400px) scale(0.5) rotateY(-45deg) rotateZ(4deg);
   opacity: 0;
+  pointer-events: none;
   overflow: hidden;
-  will-change: transform, opacity, box-shadow;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+  transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1),
+              opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1),
+              box-shadow 0.9s cubic-bezier(0.19, 1, 0.22, 1),
+              border-color 0.9s;
 }
 .proof-card::before {
   content: '';
@@ -894,40 +901,45 @@ section{
 
 /* CAROUSEL STATES */
 .proof-card.active {
-  transform: translate3d(-50%, -50%, 0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-  opacity: 1;
+  transform: translate3d(-50%, -50%, 0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
   z-index: 3;
   border-color: rgba(26, 110, 255, 0.3);
   box-shadow: 0 40px 100px rgba(26, 110, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 40px rgba(26, 110, 255, 0.1);
 }
 .proof-card.prev {
-  transform: translate3d(-90%, -46%, -180px) scale(0.8) rotateY(25deg) rotateZ(-2deg);
-  opacity: 0.4;
+  transform: translate3d(-90%, -46%, -180px) scale(0.8) rotateY(25deg) rotateZ(-2deg) !important;
+  opacity: 0.4 !important;
+  pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
 }
 .proof-card.prev:hover {
-  opacity: 0.8;
-  transform: translate3d(-92%, -48%, -150px) scale(0.82) rotateY(20deg) rotateZ(-1deg);
+  opacity: 0.8 !important;
+  transform: translate3d(-92%, -48%, -150px) scale(0.82) rotateY(20deg) rotateZ(-1deg) !important;
 }
 .proof-card.next {
-  transform: translate3d(-10%, -46%, -180px) scale(0.8) rotateY(-25deg) rotateZ(2deg);
-  opacity: 0.4;
+  transform: translate3d(-10%, -46%, -180px) scale(0.8) rotateY(-25deg) rotateZ(2deg) !important;
+  opacity: 0.4 !important;
+  pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
 }
 .proof-card.next:hover {
-  opacity: 0.8;
-  transform: translate3d(-8%, -48%, -150px) scale(0.82) rotateY(-20deg) rotateZ(1deg);
+  opacity: 0.8 !important;
+  transform: translate3d(-8%, -48%, -150px) scale(0.82) rotateY(-20deg) rotateZ(1deg) !important;
 }
 .proof-card.hidden-prev {
-  transform: translate3d(-130%, -40%, -400px) scale(0.5) rotateY(45deg) rotateZ(-4deg);
-  opacity: 0;
+  transform: translate3d(-130%, -40%, -400px) scale(0.5) rotateY(45deg) rotateZ(-4deg) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translate3d(30%, -40%, -400px) scale(0.5) rotateY(-45deg) rotateZ(4deg);
-  opacity: 0;
+  transform: translate3d(30%, -40%, -400px) scale(0.5) rotateY(-45deg) rotateZ(4deg) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
   z-index: 1;
 }
 
@@ -3425,22 +3437,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. 3D TILT CARDS
   const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block, .included-item, .faq-item, .proof-card, .portfolio-item');
   tiltCards.forEach(card => {
-    // Preserve any existing transitions but ensure transform is smooth for tilt
-    const baseTransition = window.getComputedStyle(card).transition;
-    card.style.transition = baseTransition + ', transform 0.1s ease-out';
+    // For proof-cards: DON'T set inline transition — let CSS carousel states control it
+    const isProof = card.classList.contains('proof-card');
+    const baseTransition = isProof ? '' : window.getComputedStyle(card).transition;
+    if (!isProof) card.style.transition = baseTransition + ', transform 0.1s ease-out';
     
     // Add the tilt-card class for the spotlight CSS
     card.classList.add('tilt-card');
     
     card.addEventListener('mouseenter', () => {
       if (window.innerWidth < 768) return;
-      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return;
+      // proof-cards: skip — CSS class states handle visibility
+      if (isProof) return;
       card.style.zIndex = '50';
     });
 
     card.addEventListener('mousemove', (e) => {
       if (window.innerWidth < 768) return; // Disable on mobile to prevent jitter
-      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return; // Only tilt active carousel card
+      // proof-cards: skip inline tilt — carousel CSS classes are authoritative
+      if (isProof) return;
       
       // Update transition for buttery smooth 120fps tracking
       card.style.transition = baseTransition + ', transform 0.15s cubic-bezier(0.2, 0, 0, 1)';
@@ -3467,27 +3482,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       
-      let baseTransform = '';
-      if (card.classList.contains('proof-card')) {
-        baseTransform = 'translate3d(-50%, -50%, 0) ';
-      }
-      
-      card.style.transform = `${baseTransform}perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.15, 1.15, 1.15)`;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.15, 1.15, 1.15)`;
     });
     
     card.addEventListener('mouseleave', () => {
       if (window.innerWidth < 768) return;
-      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return;
+      // proof-cards: skip — CSS handles reset
+      if (isProof) return;
       
       card.style.zIndex = '';
       card.style.transition = 'transform 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
-      
-      let baseTransform = '';
-      if (card.classList.contains('proof-card')) {
-        baseTransform = 'translate3d(-50%, -50%, 0) ';
-      }
-      
-      card.style.transform = `${baseTransform}perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
       setTimeout(() => {
         card.style.transition = baseTransition + ', transform 0.15s cubic-bezier(0.2, 0, 0, 1)';
       }, 800);
