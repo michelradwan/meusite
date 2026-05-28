@@ -969,10 +969,25 @@ section{
 }
 
 @media (max-width: 768px) {
-  .proof-carousel-container { height: 420px; }
-  .proof-card { padding: 30px; }
-  .proof-card.prev { transform: translate3d(-75%, -48%, -150px) scale(0.8) rotateY(15deg) rotateZ(-1deg); }
-  .proof-card.next { transform: translate3d(-25%, -48%, -150px) scale(0.8) rotateY(-15deg) rotateZ(1deg); }
+  .proof-carousel-container { height: 440px; }
+  .proof-card {
+    padding: 24px;
+    width: 95%;
+  }
+  .proof-card.prev,
+  .proof-card.next,
+  .proof-card.hidden-prev,
+  .proof-card.hidden-next {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transform: translate3d(-50%, -50%, -100px) scale(0.9) !important;
+  }
+  .proof-card.active {
+    transform: translate3d(-50%, -50%, 0) scale(1) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }
 .proof-quote {
   font-size: 1.15rem;
