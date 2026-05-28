@@ -1608,9 +1608,9 @@ footer a:hover{color:white;}
     pointer-events: none;
     z-index: 10000;
     box-shadow: 0 0 20px var(--blue), 0 0 40px rgba(26, 110, 255, 0.4);
-    transform: translate(-50%, -50%);
+    transform: translate3d(-50%, -50%, 0);
     transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s, border 0.3s;
-    will-change: left, top, width, height;
+    will-change: transform, width, height;
   }
   .custom-cursor.hovering {
     width: 60px; height: 60px;
@@ -3300,22 +3300,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. CUSTOM CURSOR
   const cursor = document.querySelector('.custom-cursor');
   if (cursor && window.matchMedia('(pointer: fine)').matches) {
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-    
     document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    
-    function animateCursor() {
-      cursorX += (mouseX - cursorX) * 0.15;
-      cursorY += (mouseY - cursorY) * 0.15;
-      cursor.style.left = cursorX + 'px';
-      cursor.style.top = cursorY + 'px';
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
+      // 0ms delay hardware-accelerated transform
+      cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate3d(-50%, -50%, 0)`;
+    }, {passive: true});
     
     document.querySelectorAll('a, button, .carousel-btn, .theme-toggle, .dot').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
