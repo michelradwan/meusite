@@ -1568,6 +1568,75 @@ footer a:hover{color:white;}
   to{opacity:1;transform:translateY(0);}
 }
 
+/* ==========================================================
+   MAGIC UI EFFECTS (AWWWARDS LEVEL)
+   ========================================================== */
+/* 1. Cinematic Noise Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0; /* Only visible in dark mode */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  transition: opacity 1s ease;
+  mix-blend-mode: overlay;
+}
+[data-theme="dark"] .noise-overlay {
+  opacity: 0.15;
+}
+
+/* 2. Custom Inverted Cursor */
+@media (pointer: fine) {
+  body {
+    cursor: none; /* Hide default cursor on desktop */
+  }
+  .custom-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 20px; height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    mix-blend-mode: difference;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s;
+    will-change: left, top, width, height;
+  }
+  .custom-cursor.hovering {
+    width: 60px; height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255,255,255,0.5);
+    mix-blend-mode: normal;
+  }
+}
+
+/* 3. Magnetic Buttons */
+.magnetic-btn {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* 4. 3D Tilt Cards */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 5. Scroll-Triggered Text Reveal */
+.word-reveal span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) rotateX(-20deg);
+  transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1), transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.word-reveal.visible span {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+
 /* RESPONSIVE */
 @media(max-width:640px){
   nav{padding:0 4%;}
@@ -2719,6 +2788,10 @@ footer a:hover{color:white;}
   </div>
 </section>
 
+<!-- MAGIC OVERLAYS (NOISE & CURSOR) -->
+<div class="noise-overlay"></div>
+<div class="custom-cursor"></div>
+
 <footer>
   <p>© 2026 · Michel Radwan · Sites Profissionais · <a href="https://instagram.com/michelradwan" target="_blank">@michelradwan</a></p>
 </footer>
@@ -3195,6 +3268,102 @@ document.head.appendChild(styleEl);
       setTheme(!isDark);
     });
   });
+// ==========================================
+// MAGIC UI EFFECTS (AWWWARDS LEVEL)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. CUSTOM CURSOR
+  const cursor = document.querySelector('.custom-cursor');
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top = cursorY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    
+    document.querySelectorAll('a, button, .carousel-btn, .theme-toggle, .dot').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+  }
+
+  // 2. MAGNETIC BUTTONS
+  const magneticEls = document.querySelectorAll('.btn-blue, .btn-ghost, .nav-cta');
+  magneticEls.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = `translate(0px, 0px)`;
+    });
+  });
+
+  // 3. 3D TILT CARDS
+  const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block');
+  tiltCards.forEach(card => {
+    // Preserve any existing transitions but ensure transform is smooth for tilt
+    const baseTransition = window.getComputedStyle(card).transition;
+    card.style.transition = baseTransition + ', transform 0.1s ease-out';
+    
+    card.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 768) return; // Disable on mobile to prevent jitter
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
+      const rotateY = ((x - centerX) / centerX) * 6;
+      
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      if (window.innerWidth < 768) return;
+      card.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      setTimeout(() => {
+        card.style.transition = baseTransition + ', transform 0.1s ease-out';
+      }, 600);
+    });
+  });
+
+  // 4. SCROLL TEXT REVEAL
+  const h2Elements = document.querySelectorAll('h2');
+  h2Elements.forEach(h2 => {
+    if(!h2.classList.contains('mock-h1')) {
+      h2.classList.add('word-reveal');
+      const inner = h2.innerHTML;
+      h2.innerHTML = `<span>${inner}</span>`;
+    }
+  });
+
+  const textObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.word-reveal').forEach(el => textObserver.observe(el));
+});
 
 </script>
 
