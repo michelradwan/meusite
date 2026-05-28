@@ -3328,19 +3328,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 3. 3D TILT CARDS
-  const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block');
+  const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block, .process-step, .included-item, .faq-item, .proof-card, .portfolio-item');
   tiltCards.forEach(card => {
     // Preserve any existing transitions but ensure transform is smooth for tilt
     const baseTransition = window.getComputedStyle(card).transition;
     card.style.transition = baseTransition + ', transform 0.1s ease-out';
     
+    // Add the tilt-card class for the spotlight CSS
+    card.classList.add('tilt-card');
+    
     card.addEventListener('mouseenter', () => {
       if (window.innerWidth < 768) return;
+      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return;
       card.style.zIndex = '50';
     });
 
     card.addEventListener('mousemove', (e) => {
       if (window.innerWidth < 768) return; // Disable on mobile to prevent jitter
+      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return; // Only tilt active carousel card
       
       // Update transition for buttery smooth 120fps tracking
       card.style.transition = baseTransition + ', transform 0.15s cubic-bezier(0.2, 0, 0, 1)';
@@ -3358,14 +3363,27 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.setProperty('--mouseX', `${x}px`);
       card.style.setProperty('--mouseY', `${y}px`);
       
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.15, 1.15, 1.15)`;
+      let baseTransform = '';
+      if (card.classList.contains('proof-card')) {
+        baseTransform = 'translate3d(-50%, -50%, 0) ';
+      }
+      
+      card.style.transform = `${baseTransform}perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.15, 1.15, 1.15)`;
     });
     
     card.addEventListener('mouseleave', () => {
       if (window.innerWidth < 768) return;
-      card.style.zIndex = '1';
+      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return;
+      
+      card.style.zIndex = '';
       card.style.transition = 'transform 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
-      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      
+      let baseTransform = '';
+      if (card.classList.contains('proof-card')) {
+        baseTransform = 'translate3d(-50%, -50%, 0) ';
+      }
+      
+      card.style.transform = `${baseTransform}perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
       setTimeout(() => {
         card.style.transition = baseTransition + ', transform 0.15s cubic-bezier(0.2, 0, 0, 1)';
       }, 800);
