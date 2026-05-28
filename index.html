@@ -2941,7 +2941,7 @@ const statsObserver = new IntersectionObserver((entries)=>{
 const statsSection = document.querySelector('.stats-section');
 if(statsSection) statsObserver.observe(statsSection);
 
-// ROCKETS CANVAS ANIMATION (uma vez ao scrollar)
+// ROCKETS CANVAS ANIMATION (uma vez ao scrollar + interativo ao passar o mouse)
 (function() {
   const canvas = document.getElementById('rockets-canvas');
   const section = document.querySelector('.stats-section');
@@ -2965,7 +2965,21 @@ if(statsSection) statsObserver.observe(statsSection);
     const angle  = -20 + Math.random() * 40;          // -20° a +20°
     const speed  = 1.8 + Math.random() * 2.2;         // suave
     const alpha  = 0.12 + Math.random() * 0.18;       // bem sutil atrás
-    return { x: -size * 2, y: startY, size, angle, speed, alpha, delay, trail: [] };
+    return { x: -size * 2, y: startY, size, angle, speed, alpha, delay, trail: [], isInteractive: false };
+  }
+
+  function spawnInteractiveRocket(x, y) {
+    const size  = 14 + Math.random() * 14;           // 14-28px
+    const angle = -120 + Math.random() * 60;         // -120° a -60° (para cima)
+    const speed = 3.5 + Math.random() * 4.5;         // rápido!
+    const alpha = 0.7 + Math.random() * 0.3;         // bem visível
+    const decay = 0.012 + Math.random() * 0.012;      // some aos poucos
+    rockets.push({ x, y, size, angle, speed, alpha, decay, delay: 0, trail: [], isInteractive: true });
+    
+    if (!rafId) {
+      startTime = null;
+      rafId = requestAnimationFrame(draw);
+    }
   }
 
   function initRockets() {
@@ -2994,27 +3008,33 @@ if(statsSection) statsObserver.observe(statsSection);
       r.x += Math.cos(rad) * r.speed;
       r.y += Math.sin(rad) * r.speed;
 
+      if (r.isInteractive) {
+        r.alpha -= r.decay;
+      }
+
       // Trilha
       r.trail.push({ x: r.x, y: r.y });
-      if (r.trail.length > 18) r.trail.shift();
-
-      // Ainda na tela?
-      if (r.x < canvas.width + r.size * 4) allDone = false;
+      if (r.trail.length > (r.isInteractive ? 12 : 18)) r.trail.shift();
 
       // Desenha trilha
       r.trail.forEach((pt, i) => {
         const t = i / r.trail.length;
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, r.size * 0.18 * t, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${r.alpha * t * 0.5})`;
+        if (r.isInteractive) {
+          // Trilha de fogo linda (de amarelo brilhante a vermelho/laranja)
+          ctx.fillStyle = `rgba(255, ${Math.floor(100 + t * 155)}, ${Math.floor(t * 50)}, ${r.alpha * t * 0.9})`;
+        } else {
+          ctx.fillStyle = `rgba(255,255,255,${r.alpha * t * 0.5})`;
+        }
         ctx.fill();
       });
 
       // Desenha foguete (emoji via texto)
       ctx.save();
       ctx.translate(r.x, r.y);
-      ctx.rotate((r.angle * Math.PI) / 180);
-      ctx.globalAlpha = r.alpha;
+      ctx.rotate((r.angle * Math.PI) / 180 + Math.PI / 4);
+      ctx.globalAlpha = Math.max(0, r.alpha);
       ctx.font = `${r.size}px serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -3022,12 +3042,47 @@ if(statsSection) statsObserver.observe(statsSection);
       ctx.restore();
     });
 
-    if (!allDone) {
+    // Limpa foguetes mortos
+    rockets = rockets.filter(r => {
+      if (r.isInteractive) {
+        return r.alpha > 0;
+      }
+      return r.x < canvas.width + r.size * 4;
+    });
+
+    if (rockets.length > 0 || !started) {
       rafId = requestAnimationFrame(draw);
     } else {
+      rafId = null;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   }
+
+  // Eventos interativos nos stat-blocks
+  const blocks = section.querySelectorAll('.stat-block');
+  blocks.forEach(block => {
+    block.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // 25% de chance por movimento de spawnar foguetes extras
+      if (Math.random() < 0.25) {
+        spawnInteractiveRocket(x, y);
+      }
+    }, { passive: true });
+
+    block.addEventListener('mouseenter', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Explosão de foguetes ao entrar no card
+      for (let i = 0; i < 6; i++) {
+        spawnInteractiveRocket(x, y);
+      }
+    }, { passive: true });
+  });
 
   new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !started) {
