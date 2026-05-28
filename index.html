@@ -861,16 +861,7 @@ section{
 
 /* ── CARD BASE ── */
 .proof-card {
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 32px;
-  padding: 48px;
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.04), 
-    inset 0 1px 0 rgba(255,255,255,1),
-    inset 0 0 20px rgba(255,255,255,0.5);
+  /* No background or border on the parent wrapper */
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -878,18 +869,47 @@ section{
   left: 50%;
   width: 84%;
   max-width: 580px;
-  /* Default: hidden off to the right, folded away */
+  height: auto;
+  min-height: 380px;
   transform: translate(-50%, -50%) translateX(100%) rotateY(-45deg) scale(0.7);
   opacity: 0;
   pointer-events: none;
-  overflow: hidden;
+  /* NO overflow: hidden here so translateZ can pop out */
   will-change: transform, opacity;
-  /* SPRING easing for linear/framer-motion feel */
   transition:
     transform  0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    opacity    0.6s ease,
-    box-shadow 0.6s ease,
-    border-color 0.6s ease;
+    opacity    0.6s ease;
+  transform-style: preserve-3d;
+}
+
+/* ── GLASS BACKGROUND ── */
+.proof-card-glass {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 32px;
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.04), 
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 0 20px rgba(255,255,255,0.5);
+  overflow: hidden; /* Clips the glare overlay safely */
+  z-index: 1;
+  transition: box-shadow 0.6s ease, border-color 0.6s ease;
+}
+
+/* CONTENT WRAPPER for parallax */
+.proof-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transform: translateZ(40px); /* Lifts content off the glass */
+  transition: transform 0.1s ease-out;
   transform-style: preserve-3d;
 }
 
@@ -976,6 +996,8 @@ section{
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
+}
+.proof-card.active .proof-card-glass {
   border-color: rgba(26,110,255,0.4);
   box-shadow:
     0 40px 100px rgba(26,110,255,0.15),
@@ -2693,16 +2715,18 @@ footer a:hover{color:white;}
     <div class="proof-carousel">
       <!-- Card 1 -->
       <div class="proof-card proof-slide">
-        <div class="glare-overlay"></div>
+        <!-- O vidro e o glare ficam contidos aqui com overflow:hidden -->
+        <div class="proof-card-glass">
+          <div class="glare-overlay"></div>
+        </div>
+        <!-- O conteúdo fica livre para flutuar em 3D (translateZ) -->
         <div class="proof-card-content">
           <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
           <p class="proof-quote">
             "Fui na base do custo-benefício. Estava com medo de investir e não ver retorno. Mas no terceiro mês, <strong>minha agenda de fotografia estava lotada de clientes novos que me encontraram no Google</strong>. Nunca pensei que um site fizesse tanta diferença assim."
           </p>
           <div class="proof-author">
-            <div class="proof-avatar">
-              <img src="https://ui-avatars.com/api/?name=Fernanda+Lopes&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Fernanda Lopes">
-            </div>
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Fernanda+Lopes&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Fernanda Lopes"></div>
             <div class="proof-meta">
               <h4>Fernanda Lopes</h4>
               <p>Fotógrafa de casamentos, Campinas · SP</p>
@@ -2713,16 +2737,14 @@ footer a:hover{color:white;}
 
       <!-- Card 2 -->
       <div class="proof-card proof-slide">
-        <div class="glare-overlay"></div>
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
         <div class="proof-card-content">
           <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
           <p class="proof-quote">
             "Honestamente? Fiquei com receio no começo, achei que ia ser complicado. Mas o processo foi bem tranquilo, ele foi tirando minhas dúvidas no WhatsApp. <strong>Em 6 dias o site já estava no ar.</strong> Meu vizinho perguntou qual agência tinha feito."
           </p>
           <div class="proof-author">
-            <div class="proof-avatar">
-              <img src="https://ui-avatars.com/api/?name=Thiago+Braga&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Thiago Braga">
-            </div>
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Thiago+Braga&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Thiago Braga"></div>
             <div class="proof-meta">
               <h4>Thiago Braga</h4>
               <p>Eletricista autônomo, Goiânia · GO</p>
@@ -2733,19 +2755,107 @@ footer a:hover{color:white;}
 
       <!-- Card 3 -->
       <div class="proof-card proof-slide">
-        <div class="glare-overlay"></div>
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "A minha cliente de 68 anos entrou no meu Instagram, viu o link do site e me mandou mensagem dizendo que parecia o site de uma clínica grande mesmo. Isso pra mim vale mais do que qualquer número. <strong>Profissionalismo muda como as pessoas te enxergam.</strong>"
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Juliana+Freitas&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Juliana Freitas"></div>
+            <div class="proof-meta">
+              <h4>Juliana Freitas</h4>
+              <p>Terapeuta holística, Florianópolis · SC</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="proof-card proof-slide">
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "Pagava mensalidade pro iFood e ainda ficava rehém do algoritmo deles. Fiz o site, configurei o WhatsApp e hoje <strong>atendo mais pedidos sem pagar comissão nenhuma.</strong> No mês passado economizei quase R$800 em taxa. Isso é lucro direto no meu bolso."
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Cristiano+Souza&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Cristiano Souza"></div>
+            <div class="proof-meta">
+              <h4>Cristiano Souza</h4>
+              <p>Hamburgueria artesanal, Recife · PE</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="proof-card proof-slide">
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "Trabalho com contabilidade faz 12 anos. Sempre peguei cliente por indicação. Mas quando um desconhecido me encontrou no Google e disse que meu site 'passava mais confiança que os outros' — <strong>entendi que tinha perdido anos sem isso.</strong>"
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Eduardo+Ramos&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Eduardo Ramos"></div>
+            <div class="proof-meta">
+              <h4>Eduardo Ramos</h4>
+              <p>Contador, Porto Alegre · RS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="proof-card proof-slide">
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "Minhas alunas começaram a compartilhar o link do site entre si. Uma trouxe a irmã, a irmã trouxe a cunhada. <strong>Em 2 meses fechei 7 alunas novas só pelo site,</strong> sem postar nada novo no Instagram. A palavra delas foi: 'parece sério, parece de confiança'."
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Patricia+Nunes&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Patricia Nunes"></div>
+            <div class="proof-meta">
+              <h4>Patricia Nunes</h4>
+              <p>Instrutora de pilates, Brasília · DF</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="proof-card proof-slide">
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
         <div class="proof-card-content">
           <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
           <p class="proof-quote">
             "O cliente chegou no meu salão já sabendo os preços, os horários e que sou especialista em coloração. <strong>Ele já estava 'vendido' antes de entrar pela porta.</strong> Isso é o site trabalhando por mim enquanto eu estava dormindo."
           </p>
           <div class="proof-author">
-            <div class="proof-avatar">
-              <img src="https://ui-avatars.com/api/?name=Vanessa+Torres&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Vanessa Torres">
-            </div>
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Vanessa+Torres&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Vanessa Torres"></div>
             <div class="proof-meta">
               <h4>Vanessa Torres</h4>
               <p>Cabeleireira, Santo André · SP</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="proof-card proof-slide">
+        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "Quando fiz o site com portfólio de obras, <strong>o tipo de cliente mudou completamente.</strong> Hoje atendo obra maior, com melhor margem, e o cliente mal bate no preço. Parece outro mercado. Só mudou o site — o resto sou eu mesmo."
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Andre+Machado&background=1A6EFF&color=fff&rounded=true&bold=true" alt="André Machado"></div>
+            <div class="proof-meta">
+              <h4>André Machado</h4>
+              <p>Engenheiro civil autônomo, Curitiba · PR</p>
             </div>
           </div>
         </div>
