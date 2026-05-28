@@ -845,12 +845,11 @@ section{
 }
 .proof-carousel-container {
   position: relative;
-  max-width: 920px;
+  max-width: 960px;
   margin: 0 auto;
-  height: 440px;
-  perspective: 1400px;       /* 3D depth — no preserve-3d needed */
+  height: 450px;
+  perspective: 1100px;  /* tight perspective = dramatic 3D depth */
   z-index: 2;
-  /* NO overflow:hidden — side cards must be visible */
 }
 .proof-carousel {
   position: relative;
@@ -858,40 +857,41 @@ section{
   height: 100%;
 }
 
-/* Base card — anchored to exact center, hidden by default */
+/* ── CARD BASE ── anchored to center, invisible by default */
 .proof-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.97);
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 40px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08),
-              inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 0 24px 50px rgba(26,110,255,0.07), inset 0 1px 0 rgba(255,255,255,0.6);
   display: flex;
   flex-direction: column;
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 86%;
+  width: 84%;
   max-width: 560px;
-  /* Hidden default: centered anchor + shift right + rotated away */
-  transform: translate(-50%, -50%) translateX(90px) rotateY(-18deg) scale(0.84);
+  /* Default: hidden off to the right, folded away */
+  transform: translate(-50%, -50%) translateX(100%) rotateY(-55deg) scale(0.7);
   opacity: 0;
   pointer-events: none;
   overflow: hidden;
   will-change: transform, opacity;
-  transition: transform 0.75s cubic-bezier(0.19, 1, 0.22, 1),
-              opacity 0.75s cubic-bezier(0.19, 1, 0.22, 1),
-              box-shadow 0.75s cubic-bezier(0.19, 1, 0.22, 1),
-              border-color 0.75s;
+  /* SPRING easing — snappy with a little overshoot */
+  transition:
+    transform  0.72s cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity    0.55s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.55s ease,
+    border-color 0.55s ease;
 }
 .proof-card::before {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at top right,
-    rgba(26, 110, 255, 0.08), transparent 60%);
+    rgba(26,110,255,0.09), transparent 60%);
   opacity: 0;
   transition: opacity 0.5s;
   pointer-events: none;
@@ -899,55 +899,69 @@ section{
 }
 .proof-card:hover::before { opacity: 1; }
 
-/* ── CAROUSEL STATES (all start with the centering anchor) ── */
+/* Spring entrance keyframe — card pops in with a punch */
+@keyframes cardPunchIn {
+  0%   { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(0.88); }
+  60%  { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1.03); }
+  100% { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1); }
+}
+.proof-card.entering {
+  animation: cardPunchIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 3;
+}
 
-/* ACTIVE — front and center, facing viewer */
+/* ── COVERFLOW STATES ── */
+
+/* ACTIVE — faces the viewer, elevated */
 .proof-card.active {
   transform: translate(-50%, -50%) translateX(0) rotateY(0deg) scale(1) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
-  border-color: rgba(26, 110, 255, 0.3);
-  box-shadow: 0 32px 80px rgba(26, 110, 255, 0.14),
-              inset 0 1px 0 rgba(255, 255, 255, 0.85),
-              0 0 40px rgba(26, 110, 255, 0.07);
+  border-color: rgba(26,110,255,0.25);
+  box-shadow:
+    0 40px 90px rgba(26,110,255,0.13),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 0 0 1px rgba(26,110,255,0.08);
 }
 
-/* PREV — left side, rotated slightly toward viewer */
+/* PREV — left, dramatically folded (Coverflow) */
 .proof-card.prev {
-  transform: translate(-50%, -50%) translateX(-42%) rotateY(22deg) scale(0.82) !important;
-  opacity: 0.52 !important;
+  transform: translate(-50%, -50%) translateX(-50%) rotateY(52deg) scale(0.76) !important;
+  opacity: 0.58 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
 }
 .proof-card.prev:hover {
-  opacity: 0.76 !important;
-  transform: translate(-50%, -50%) translateX(-40%) rotateY(18deg) scale(0.85) !important;
+  opacity: 0.8 !important;
+  transform: translate(-50%, -50%) translateX(-48%) rotateY(44deg) scale(0.80) !important;
 }
 
-/* NEXT — right side, rotated slightly toward viewer */
+/* NEXT — right, dramatically folded (Coverflow) */
 .proof-card.next {
-  transform: translate(-50%, -50%) translateX(42%) rotateY(-22deg) scale(0.82) !important;
-  opacity: 0.52 !important;
+  transform: translate(-50%, -50%) translateX(50%) rotateY(-52deg) scale(0.76) !important;
+  opacity: 0.58 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
 }
 .proof-card.next:hover {
-  opacity: 0.76 !important;
-  transform: translate(-50%, -50%) translateX(40%) rotateY(-18deg) scale(0.85) !important;
+  opacity: 0.8 !important;
+  transform: translate(-50%, -50%) translateX(48%) rotateY(-44deg) scale(0.80) !important;
 }
 
-/* HIDDEN — fully off-screen */
+/* HIDDEN — fully off-screen, completely folded */
 .proof-card.hidden-prev {
-  transform: translate(-50%, -50%) translateX(-110%) rotateY(40deg) scale(0.65) !important;
+  transform: translate(-50%, -50%) translateX(-110%) rotateY(70deg) scale(0.55) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translate(-50%, -50%) translateX(110%) rotateY(-40deg) scale(0.65) !important;
+  transform: translate(-50%, -50%) translateX(110%) rotateY(-70deg) scale(0.55) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
@@ -956,15 +970,15 @@ section{
 /* ── NAV BUTTONS ── */
 .carousel-nav {
   position: absolute;
-  bottom: -54px;
+  bottom: -58px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 20px;
+  gap: 16px;
   z-index: 10;
 }
 .carousel-btn {
-  width: 50px; height: 50px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   background: var(--white);
   border: 1px solid var(--border);
@@ -973,34 +987,37 @@ section{
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .carousel-btn:hover {
-  background: rgba(26, 110, 255, 0.05);
-  border-color: rgba(26, 110, 255, 0.3);
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 10px 20px rgba(26, 110, 255, 0.1);
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(26,110,255,0.28);
 }
 .carousel-btn svg {
-  width: 22px; height: 22px;
-  stroke: currentColor; stroke-width: 2; fill: none;
+  width: 20px; height: 20px;
+  stroke: currentColor; stroke-width: 2.5; fill: none;
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .proof-carousel-container { height: 460px; perspective: none; }
-  .proof-card { padding: 28px; width: 92%; }
-  /* Mobile: only active card, no side peeking */
-  .proof-card.prev,
-  .proof-card.next,
-  .proof-card.hidden-prev,
-  .proof-card.hidden-next {
+  .proof-carousel-container { height: 480px; perspective: none; }
+  .proof-card { padding: 28px; width: 94%; }
+  /* Mobile: single card, no Coverflow */
+  .proof-card.prev, .proof-card.next,
+  .proof-card.hidden-prev, .proof-card.hidden-next {
     opacity: 0 !important;
     pointer-events: none !important;
-    transform: translate(-50%, -50%) translateX(0) rotateY(0deg) scale(0.95) !important;
+    transform: translate(-50%, -50%) scale(0.95) !important;
   }
   .proof-card.active {
-    transform: translate(-50%, -50%) translateX(0) rotateY(0deg) scale(1) !important;
+    transform: translate(-50%, -50%) scale(1) !important;
     opacity: 1 !important;
+  }
+  .proof-card.entering {
+    animation: cardPunchIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
   }
 }
 .proof-quote {
@@ -3322,23 +3339,33 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateCarousel() {
       slides.forEach((slide, index) => {
-        // Limpa estilos inline aplicados pelo tilt JS para evitar conflitos de especificidade
+        // Clear any inline styles to avoid cascade conflicts
         slide.style.transform = '';
         slide.style.transition = '';
         slide.style.zIndex = '';
-        
-        slide.classList.remove('active', 'prev', 'next', 'hidden-prev', 'hidden-next');
-        
+        slide.classList.remove('active', 'prev', 'next', 'hidden-prev', 'hidden-next', 'entering');
+
+        let role = '';
         if (index === currentIndex) {
-          slide.classList.add('active');
+          role = 'active';
         } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
-          slide.classList.add('prev');
+          role = 'prev';
         } else if (index === (currentIndex + 1) % slides.length) {
-          slide.classList.add('next');
+          role = 'next';
         } else if (index === (currentIndex - 2 + slides.length) % slides.length) {
-          slide.classList.add('hidden-prev');
+          role = 'hidden-prev';
         } else {
-          slide.classList.add('hidden-next');
+          role = 'hidden-next';
+        }
+        slide.classList.add(role);
+
+        // Spring entrance animation on newly active card
+        if (role === 'active') {
+          // Briefly add 'entering' for punch-in keyframe, then revert to 'active'
+          slide.classList.add('entering');
+          setTimeout(() => {
+            slide.classList.remove('entering');
+          }, 600);
         }
       });
     }
