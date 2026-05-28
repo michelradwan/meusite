@@ -845,20 +845,15 @@ section{
 }
 .proof-carousel-container {
   position: relative;
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
-  perspective: 1200px;
-  height: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 440px;
   z-index: 2;
 }
 .proof-carousel {
   position: relative;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d;
 }
 .proof-card {
   background: rgba(255, 255, 255, 0.95);
@@ -870,21 +865,23 @@ section{
   box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
+  /* All cards centered in the container; transform shifts them */
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0; left: 0; right: 0; bottom: 0;
+  margin: auto;
   width: 90%;
-  max-width: 580px;
-  /* Default: off-screen hidden (JS will assign active/prev/next classes) */
-  transform: translate3d(30%, -40%, -400px) scale(0.5) rotateY(-45deg) rotateZ(4deg);
+  max-width: 560px;
+  height: fit-content;
+  /* Default: invisible, shifted right */
   opacity: 0;
   pointer-events: none;
+  transform: translateX(80px) scale(0.92);
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1),
+              opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1),
+              box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1),
+              border-color 0.7s;
   overflow: hidden;
   will-change: transform, opacity;
-  transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1),
-              opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1),
-              box-shadow 0.9s cubic-bezier(0.19, 1, 0.22, 1),
-              border-color 0.9s;
 }
 .proof-card::before {
   content: '';
@@ -895,13 +892,11 @@ section{
   transition: opacity 0.6s;
   pointer-events: none;
 }
-.proof-card:hover::before {
-  opacity: 1;
-}
+.proof-card:hover::before { opacity: 1; }
 
 /* CAROUSEL STATES */
 .proof-card.active {
-  transform: translate3d(-50%, -50%, 0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) !important;
+  transform: translateX(0) scale(1) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
@@ -909,35 +904,39 @@ section{
   box-shadow: 0 40px 100px rgba(26, 110, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 40px rgba(26, 110, 255, 0.1);
 }
 .proof-card.prev {
-  transform: translate3d(-90%, -46%, -180px) scale(0.8) rotateY(25deg) rotateZ(-2deg) !important;
-  opacity: 0.4 !important;
+  transform: translateX(-75%) scale(0.88) !important;
+  opacity: 0.45 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
+  filter: blur(0.5px);
 }
 .proof-card.prev:hover {
-  opacity: 0.8 !important;
-  transform: translate3d(-92%, -48%, -150px) scale(0.82) rotateY(20deg) rotateZ(-1deg) !important;
+  opacity: 0.72 !important;
+  transform: translateX(-72%) scale(0.9) !important;
+  filter: blur(0px) !important;
 }
 .proof-card.next {
-  transform: translate3d(-10%, -46%, -180px) scale(0.8) rotateY(-25deg) rotateZ(2deg) !important;
-  opacity: 0.4 !important;
+  transform: translateX(75%) scale(0.88) !important;
+  opacity: 0.45 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
+  filter: blur(0.5px);
 }
 .proof-card.next:hover {
-  opacity: 0.8 !important;
-  transform: translate3d(-8%, -48%, -150px) scale(0.82) rotateY(-20deg) rotateZ(1deg) !important;
+  opacity: 0.72 !important;
+  transform: translateX(72%) scale(0.9) !important;
+  filter: blur(0px) !important;
 }
 .proof-card.hidden-prev {
-  transform: translate3d(-130%, -40%, -400px) scale(0.5) rotateY(45deg) rotateZ(-4deg) !important;
+  transform: translateX(-120%) scale(0.75) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translate3d(30%, -40%, -400px) scale(0.5) rotateY(-45deg) rotateZ(4deg) !important;
+  transform: translateX(120%) scale(0.75) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
@@ -945,7 +944,7 @@ section{
 
 .carousel-nav {
   position: absolute;
-  bottom: -40px;
+  bottom: -50px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -982,23 +981,18 @@ section{
 
 @media (max-width: 768px) {
   .proof-carousel-container { height: 440px; }
-  .proof-card {
-    padding: 24px;
-    width: 95%;
-  }
+  .proof-card { padding: 24px; width: 95%; max-width: 100%; }
   .proof-card.prev,
   .proof-card.next,
   .proof-card.hidden-prev,
   .proof-card.hidden-next {
     opacity: 0 !important;
     pointer-events: none !important;
-    visibility: hidden !important;
-    transform: translate3d(-50%, -50%, -100px) scale(0.9) !important;
+    transform: translateX(0) scale(0.95) !important;
   }
   .proof-card.active {
-    transform: translate3d(-50%, -50%, 0) scale(1) !important;
+    transform: translateX(0) scale(1) !important;
     opacity: 1 !important;
-    visibility: visible !important;
   }
 }
 .proof-quote {
