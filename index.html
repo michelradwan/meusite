@@ -847,7 +847,8 @@ section{
   position: relative;
   max-width: 900px;
   margin: 0 auto;
-  height: 440px;
+  height: 430px;
+  overflow: hidden; /* clip side cards so they don't bleed */
   z-index: 2;
 }
 .proof-carousel {
@@ -865,23 +866,22 @@ section{
   box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
-  /* All cards centered in the container; transform shifts them */
+  /* Anchor every card at the exact center of the container */
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  margin: auto;
+  top: 50%;
+  left: 50%;
   width: 90%;
   max-width: 560px;
-  height: fit-content;
-  /* Default: invisible, shifted right */
+  /* Default hidden state: centered anchor + shifted slightly right */
+  transform: translate(-50%, -50%) translateX(60px) scale(0.92);
   opacity: 0;
   pointer-events: none;
-  transform: translateX(80px) scale(0.92);
-  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1),
-              opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1),
-              box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1),
-              border-color 0.7s;
   overflow: hidden;
   will-change: transform, opacity;
+  transition: transform 0.65s cubic-bezier(0.19, 1, 0.22, 1),
+              opacity 0.65s cubic-bezier(0.19, 1, 0.22, 1),
+              box-shadow 0.65s cubic-bezier(0.19, 1, 0.22, 1),
+              border-color 0.65s;
 }
 .proof-card::before {
   content: '';
@@ -894,49 +894,53 @@ section{
 }
 .proof-card:hover::before { opacity: 1; }
 
-/* CAROUSEL STATES */
+/* ── CAROUSEL STATES ── */
+/* Active: perfectly centered */
 .proof-card.active {
-  transform: translateX(0) scale(1) !important;
+  transform: translate(-50%, -50%) translateX(0) scale(1) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
   border-color: rgba(26, 110, 255, 0.3);
-  box-shadow: 0 40px 100px rgba(26, 110, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 40px rgba(26, 110, 255, 0.1);
+  box-shadow: 0 30px 80px rgba(26, 110, 255, 0.14),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8),
+              0 0 40px rgba(26, 110, 255, 0.08);
 }
+/* Prev: shifted to the left, slightly scaled down */
 .proof-card.prev {
-  transform: translateX(-75%) scale(0.88) !important;
+  transform: translate(-50%, -50%) translateX(-82%) scale(0.84) !important;
   opacity: 0.45 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
-  filter: blur(0.5px);
+  filter: blur(0.8px);
 }
 .proof-card.prev:hover {
-  opacity: 0.72 !important;
-  transform: translateX(-72%) scale(0.9) !important;
+  opacity: 0.7 !important;
   filter: blur(0px) !important;
 }
+/* Next: shifted to the right, slightly scaled down */
 .proof-card.next {
-  transform: translateX(75%) scale(0.88) !important;
+  transform: translate(-50%, -50%) translateX(82%) scale(0.84) !important;
   opacity: 0.45 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
-  filter: blur(0.5px);
+  filter: blur(0.8px);
 }
 .proof-card.next:hover {
-  opacity: 0.72 !important;
-  transform: translateX(72%) scale(0.9) !important;
+  opacity: 0.7 !important;
   filter: blur(0px) !important;
 }
+/* Hidden cards: fully off-screen */
 .proof-card.hidden-prev {
-  transform: translateX(-120%) scale(0.75) !important;
+  transform: translate(-50%, -50%) translateX(-160%) scale(0.7) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translateX(120%) scale(0.75) !important;
+  transform: translate(-50%, -50%) translateX(160%) scale(0.7) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
@@ -944,7 +948,7 @@ section{
 
 .carousel-nav {
   position: absolute;
-  bottom: -50px;
+  bottom: -52px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -972,26 +976,24 @@ section{
   box-shadow: 0 10px 20px rgba(26, 110, 255, 0.1), 0 0 15px rgba(26, 110, 255, 0.05);
 }
 .carousel-btn svg {
-  width: 22px;
-  height: 22px;
-  stroke: currentColor;
-  stroke-width: 2;
-  fill: none;
+  width: 22px; height: 22px;
+  stroke: currentColor; stroke-width: 2; fill: none;
 }
 
 @media (max-width: 768px) {
-  .proof-carousel-container { height: 440px; }
-  .proof-card { padding: 24px; width: 95%; max-width: 100%; }
+  .proof-carousel-container { height: 460px; }
+  .proof-card { padding: 28px; width: 92%; }
+  /* On mobile: only show the active card */
   .proof-card.prev,
   .proof-card.next,
   .proof-card.hidden-prev,
   .proof-card.hidden-next {
     opacity: 0 !important;
     pointer-events: none !important;
-    transform: translateX(0) scale(0.95) !important;
+    transform: translate(-50%, -50%) translateX(0) scale(0.95) !important;
   }
   .proof-card.active {
-    transform: translateX(0) scale(1) !important;
+    transform: translate(-50%, -50%) scale(1) !important;
     opacity: 1 !important;
   }
 }
