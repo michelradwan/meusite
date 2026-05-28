@@ -50,6 +50,28 @@
   from, to { border-color: transparent; }
   50% { border-color: var(--blue); }
 }
+
+/* SHIMMER EFFECT FOR ALL HIGHLIGHTED WORDS */
+em {
+  font-style: italic;
+  background-image: linear-gradient(120deg, currentColor 35%, rgba(255, 255, 255, 0.85) 48%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.85) 52%, currentColor 65%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShinePremium 4s linear infinite;
+  will-change: background-position;
+}
+
+@keyframes textShinePremium {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
 html{scroll-behavior:smooth;}
 body{
   font-family:'Sora',sans-serif;
@@ -165,7 +187,7 @@ nav.scrolled{box-shadow:0 4px 30px rgba(26,110,255,0.08);}
   position:relative;
   display:inline-block;
   opacity:0;
-  animation:fadeUpPremium 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+  animation:fadeUpPremium 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards, textShinePremium 4s linear infinite;
 }
 .hero-sub{
   font-size:1.05rem;
@@ -3271,6 +3293,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateCarousel() {
       slides.forEach((slide, index) => {
+        // Limpa estilos inline aplicados pelo tilt JS para evitar conflitos de especificidade
+        slide.style.transform = '';
+        slide.style.transition = '';
+        slide.style.zIndex = '';
+        
         slide.classList.remove('active', 'prev', 'next', 'hidden-prev', 'hidden-next');
         
         if (index === currentIndex) {
