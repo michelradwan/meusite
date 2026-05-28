@@ -836,19 +836,14 @@ section{
 }
 .proof-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
+.proof-header p { font-size: 1.15rem; color: var(--text); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
 .proof-carousel-container {
   position: relative;
   max-width: 960px;
   margin: 0 auto;
-  height: 450px;
-  perspective: 1100px;  /* tight perspective = dramatic 3D depth */
+  height: 480px;
+  perspective: 1200px;  /* 3D depth for cinematic feel */
   z-index: 2;
 }
 .proof-carousel {
@@ -857,56 +852,111 @@ section{
   height: 100%;
 }
 
-/* ── CARD BASE ── anchored to center, invisible by default */
+/* ── CARD BASE ── */
 .proof-card {
-  background: rgba(255, 255, 255, 0.97);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 40px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 24px 50px rgba(26,110,255,0.07), inset 0 1px 0 rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 32px;
+  padding: 48px;
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.04), 
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 0 20px rgba(255,255,255,0.5);
   display: flex;
   flex-direction: column;
   position: absolute;
   top: 50%;
   left: 50%;
   width: 84%;
-  max-width: 560px;
+  max-width: 580px;
   /* Default: hidden off to the right, folded away */
-  transform: translate(-50%, -50%) translateX(100%) rotateY(-55deg) scale(0.7);
+  transform: translate(-50%, -50%) translateX(100%) rotateY(-45deg) scale(0.7);
   opacity: 0;
   pointer-events: none;
   overflow: hidden;
   will-change: transform, opacity;
-  /* SPRING easing — snappy with a little overshoot */
+  /* SPRING easing for linear/framer-motion feel */
   transition:
-    transform  0.72s cubic-bezier(0.34, 1.4, 0.64, 1),
-    opacity    0.55s cubic-bezier(0.34, 1.4, 0.64, 1),
-    box-shadow 0.55s ease,
-    border-color 0.55s ease;
+    transform  0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity    0.6s ease,
+    box-shadow 0.6s ease,
+    border-color 0.6s ease;
+  transform-style: preserve-3d;
 }
-.proof-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right,
-    rgba(26,110,255,0.09), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.5s;
-  pointer-events: none;
-  border-radius: inherit;
-}
-.proof-card:hover::before { opacity: 1; }
 
-/* Spring entrance keyframe — card pops in with a punch */
+/* GLARE OVERLAY for 4D effect */
+.glare-overlay {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(30deg) translate(0, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* CONTENT WRAPPER for parallax */
+.proof-card-content {
+  position: relative;
+  z-index: 2;
+  transform: translateZ(30px); /* Lifts content off the glass */
+  transition: transform 0.1s ease-out;
+}
+
+.proof-quote-icon {
+  width: 32px;
+  height: 32px;
+  fill: var(--blue);
+  opacity: 0.2;
+  margin-bottom: 24px;
+}
+
+.proof-quote {
+  font-size: 1.25rem;
+  color: var(--dark);
+  line-height: 1.6;
+  font-weight: 400;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+.proof-quote strong {
+  font-weight: 600;
+  color: var(--blue);
+}
+
+.proof-author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+}
+.proof-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+.proof-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.proof-meta h4 { font-size: 1.05rem; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+.proof-meta p { font-size: 0.9rem; color: var(--text); opacity: 0.8; }
+
+/* Spring entrance keyframe */
 @keyframes cardPunchIn {
-  0%   { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(0.88); }
-  60%  { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1.03); }
+  0%   { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(0.85); }
+  60%  { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1.02); }
   100% { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1); }
 }
 .proof-card.entering {
-  animation: cardPunchIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  animation: cardPunchIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
@@ -914,54 +964,54 @@ section{
 
 /* ── COVERFLOW STATES ── */
 
-/* ACTIVE — faces the viewer, elevated */
 .proof-card.active {
   transform: translate(-50%, -50%) translateX(0) rotateY(0deg) scale(1) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
-  border-color: rgba(26,110,255,0.25);
+  border-color: rgba(26,110,255,0.4);
   box-shadow:
-    0 40px 90px rgba(26,110,255,0.13),
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 0 0 1px rgba(26,110,255,0.08);
+    0 40px 100px rgba(26,110,255,0.15),
+    inset 0 1px 0 rgba(255,255,255,1),
+    0 0 0 1px rgba(26,110,255,0.1);
 }
 
-/* PREV — left, dramatically folded (Coverflow) */
 .proof-card.prev {
-  transform: translate(-50%, -50%) translateX(-50%) rotateY(52deg) scale(0.76) !important;
-  opacity: 0.58 !important;
+  transform: translate(-50%, -50%) translateX(-55%) rotateY(35deg) scale(0.8) !important;
+  opacity: 0.4 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
+  filter: blur(2px);
 }
 .proof-card.prev:hover {
-  opacity: 0.8 !important;
-  transform: translate(-50%, -50%) translateX(-48%) rotateY(44deg) scale(0.80) !important;
+  opacity: 0.6 !important;
+  transform: translate(-50%, -50%) translateX(-52%) rotateY(25deg) scale(0.85) !important;
+  filter: blur(0px);
 }
 
-/* NEXT — right, dramatically folded (Coverflow) */
 .proof-card.next {
-  transform: translate(-50%, -50%) translateX(50%) rotateY(-52deg) scale(0.76) !important;
-  opacity: 0.58 !important;
+  transform: translate(-50%, -50%) translateX(55%) rotateY(-35deg) scale(0.8) !important;
+  opacity: 0.4 !important;
   pointer-events: auto !important;
   z-index: 2;
   cursor: pointer;
+  filter: blur(2px);
 }
 .proof-card.next:hover {
-  opacity: 0.8 !important;
-  transform: translate(-50%, -50%) translateX(48%) rotateY(-44deg) scale(0.80) !important;
+  opacity: 0.6 !important;
+  transform: translate(-50%, -50%) translateX(52%) rotateY(-25deg) scale(0.85) !important;
+  filter: blur(0px);
 }
 
-/* HIDDEN — fully off-screen, completely folded */
 .proof-card.hidden-prev {
-  transform: translate(-50%, -50%) translateX(-110%) rotateY(70deg) scale(0.55) !important;
+  transform: translate(-50%, -50%) translateX(-120%) rotateY(60deg) scale(0.6) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translate(-50%, -50%) translateX(110%) rotateY(-70deg) scale(0.55) !important;
+  transform: translate(-50%, -50%) translateX(120%) rotateY(-60deg) scale(0.6) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
@@ -970,7 +1020,7 @@ section{
 /* ── NAV BUTTONS ── */
 .carousel-nav {
   position: absolute;
-  bottom: -58px;
+  bottom: -40px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -980,21 +1030,25 @@ section{
 .carousel-btn {
   width: 48px; height: 48px;
   border-radius: 50%;
-  background: var(--white);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,1);
   display: flex; align-items: center; justify-content: center;
-  color: var(--text);
+  color: var(--dark);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 .carousel-btn:hover {
   background: var(--blue);
   border-color: var(--blue);
   color: #fff;
-  transform: scale(1.12) translateY(-2px);
-  box-shadow: 0 8px 24px rgba(26,110,255,0.28);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 24px rgba(26,110,255,0.3);
+}
+.carousel-btn:active {
+  transform: scale(0.95);
 }
 .carousel-btn svg {
   width: 20px; height: 20px;
@@ -1003,8 +1057,11 @@ section{
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .proof-carousel-container { height: 480px; perspective: none; }
-  .proof-card { padding: 28px; width: 94%; }
+  .proof-header h2 { font-size: 2.2rem; }
+  .proof-carousel-container { height: 500px; perspective: none; }
+  .proof-card { padding: 32px; width: 94%; border-radius: 24px; transform-style: flat; }
+  .proof-quote { font-size: 1.1rem; }
+  .proof-card-content { transform: none; }
   /* Mobile: single card, no Coverflow */
   .proof-card.prev, .proof-card.next,
   .proof-card.hidden-prev, .proof-card.hidden-next {
@@ -1019,50 +1076,6 @@ section{
   .proof-card.entering {
     animation: cardPunchIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
   }
-}
-.proof-quote {
-  font-size: 1.15rem;
-  color: var(--text);
-  line-height: 1.7;
-  font-weight: 400;
-  margin-bottom: 30px;
-  position: relative;
-  z-index: 1;
-}
-.proof-quote strong {
-  color: var(--dark);
-  font-weight: 600;
-}
-.proof-author {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-  z-index: 1;
-}
-.proof-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--ice);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-.proof-meta h4 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--dark);
-  margin-bottom: 3px;
-}
-.proof-meta p {
-  font-size: 0.8rem;
-  color: var(--text-mid);
-  letter-spacing: 0.5px;
 }
 
 /* CTA */
@@ -2660,7 +2673,10 @@ footer a:hover{color:white;}
 </section>
 
 <!-- PROOF -->
-<section class="proof-section">
+<section class="proof-section" id="proof">
+  <!-- Glowing Background -->
+  <div class="proof-glow-bg"></div>
+
   <div class="proof-header reveal">
     <h2>O <em>impacto</em> de um site profissional</h2>
     <p>Histórias reais de negócios que deixaram de ser invisíveis e começaram a dominar suas regiões no digital.</p>
@@ -2670,112 +2686,60 @@ footer a:hover{color:white;}
     <div class="proof-carousel">
       <!-- Card 1 -->
       <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "Fui na base do custo-benefício. Estava com medo de investir e não ver retorno. Mas no terceiro mês, <strong>minha agenda de fotografia estava lotada de clientes novos que me encontraram no Google</strong>. Nunca pensei que um site fizesse tanta diferença assim."
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">📷</div>
-          <div class="proof-meta">
-            <h4>Fernanda Lopes</h4>
-            <p>Fotógrafa de casamentos, Campinas · SP</p>
+        <div class="glare-overlay"></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "Fui na base do custo-benefício. Estava com medo de investir e não ver retorno. Mas no terceiro mês, <strong>minha agenda de fotografia estava lotada de clientes novos que me encontraram no Google</strong>. Nunca pensei que um site fizesse tanta diferença assim."
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar">
+              <img src="https://ui-avatars.com/api/?name=Fernanda+Lopes&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Fernanda Lopes">
+            </div>
+            <div class="proof-meta">
+              <h4>Fernanda Lopes</h4>
+              <p>Fotógrafa de casamentos, Campinas · SP</p>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Card 2 -->
       <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "Honestamente? Fiquei com receio no começo, achei que ia ser complicado. Mas o processo foi bem tranquilo, ele foi tirando minhas dúvidas no WhatsApp. <strong>Em 6 dias o site já estava no ar.</strong> Meu vizinho perguntou qual agência tinha feito."
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">🔧</div>
-          <div class="proof-meta">
-            <h4>Thiago Braga</h4>
-            <p>Eletricista autônomo, Goiânia · GO</p>
+        <div class="glare-overlay"></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "Honestamente? Fiquei com receio no começo, achei que ia ser complicado. Mas o processo foi bem tranquilo, ele foi tirando minhas dúvidas no WhatsApp. <strong>Em 6 dias o site já estava no ar.</strong> Meu vizinho perguntou qual agência tinha feito."
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar">
+              <img src="https://ui-avatars.com/api/?name=Thiago+Braga&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Thiago Braga">
+            </div>
+            <div class="proof-meta">
+              <h4>Thiago Braga</h4>
+              <p>Eletricista autônomo, Goiânia · GO</p>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Card 3 -->
       <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "A minha cliente de 68 anos entrou no meu Instagram, viu o link do site e me mandou mensagem dizendo que parecia o site de uma clínica grande mesmo. Isso pra mim vale mais do que qualquer número. <strong>Profissionalismo muda como as pessoas te enxergam.</strong>"
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">💆</div>
-          <div class="proof-meta">
-            <h4>Juliana Freitas</h4>
-            <p>Terapeuta holística, Florianópolis · SC</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "Pagava mensalidade pro iFood e ainda ficava rehém do algoritmo deles. Fiz o site, configurei o WhatsApp e hoje <strong>atendo mais pedidos sem pagar comissão nenhuma.</strong> No mês passado economizei quase R$800 em taxa. Isso é lucro direto no meu bolso."
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">🍔</div>
-          <div class="proof-meta">
-            <h4>Cristiano Souza</h4>
-            <p>Hamburgueria artesanal, Recife · PE</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "Trabalho com contabilidade faz 12 anos. Sempre peguei cliente por indicação. Mas quando um desconhecido me encontrou no Google e disse que meu site 'passava mais confiança que os outros' — <strong>entendi que tinha perdido anos sem isso.</strong>"
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">📊</div>
-          <div class="proof-meta">
-            <h4>Eduardo Ramos</h4>
-            <p>Contador, Porto Alegre · RS</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 6 -->
-      <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "Minhas alunas começaram a compartilhar o link do site entre si. Uma trouxe a irmã, a irmã trouxe a cunhada. <strong>Em 2 meses fechei 7 alunas novas só pelo site,</strong> sem postar nada novo no Instagram. A palavra delas foi: 'parece sério, parece de confiança'."
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">🧘</div>
-          <div class="proof-meta">
-            <h4>Patricia Nunes</h4>
-            <p>Instrutora de pilates, Brasília · DF</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 7 -->
-      <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "O cliente chegou no meu salão já sabendo os preços, os horários e que sou especialista em coloração. <strong>Ele já estava 'vendido' antes de entrar pela porta.</strong> Isso é o site trabalhando por mim enquanto eu estava dormindo."
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">✂️</div>
-          <div class="proof-meta">
-            <h4>Vanessa Torres</h4>
-            <p>Cabeleireira, Santo André · SP</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 8 -->
-      <div class="proof-card proof-slide">
-        <p class="proof-quote">
-          "Quando fiz o site com portfólio de obras, <strong>o tipo de cliente mudou completamente.</strong> Hoje atendo obra maior, com melhor margem, e o cliente mal bate no preço. Parece outro mercado. Só mudou o site — o resto sou eu mesmo."
-        </p>
-        <div class="proof-author">
-          <div class="proof-avatar">🏗️</div>
-          <div class="proof-meta">
-            <h4>André Machado</h4>
-            <p>Engenheiro civil autônomo, Curitiba · PR</p>
+        <div class="glare-overlay"></div>
+        <div class="proof-card-content">
+          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="proof-quote">
+            "O cliente chegou no meu salão já sabendo os preços, os horários e que sou especialista em coloração. <strong>Ele já estava 'vendido' antes de entrar pela porta.</strong> Isso é o site trabalhando por mim enquanto eu estava dormindo."
+          </p>
+          <div class="proof-author">
+            <div class="proof-avatar">
+              <img src="https://ui-avatars.com/api/?name=Vanessa+Torres&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Vanessa Torres">
+            </div>
+            <div class="proof-meta">
+              <h4>Vanessa Torres</h4>
+              <p>Cabeleireira, Santo André · SP</p>
+            </div>
           </div>
         </div>
       </div>
@@ -3388,6 +3352,53 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (slide.classList.contains('next')) {
           currentIndex = (currentIndex + 1) % slides.length;
           updateCarousel();
+        }
+      });
+      
+      // 4D Cinematic Effect for Active Card
+      const content = slide.querySelector('.proof-card-content');
+      const glare = slide.querySelector('.glare-overlay');
+      
+      slide.addEventListener('mousemove', (e) => {
+        if (window.innerWidth < 768) return;
+        if (!slide.classList.contains('active')) return;
+        
+        const rect = slide.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element
+        const y = e.clientY - rect.top;  // y position within the element
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // Calculate rotation (-8 to 8 degrees)
+        const rotateX = ((y - centerY) / centerY) * -8;
+        const rotateY = ((x - centerX) / centerX) * 8;
+        
+        slide.style.transition = 'transform 0.1s ease-out';
+        slide.style.transform = `translate(-50%, -50%) perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        
+        if(content) {
+          content.style.transform = `translateZ(40px) translateX(${rotateY * -0.5}px) translateY(${rotateX * 0.5}px)`;
+        }
+        
+        if(glare) {
+          glare.style.opacity = '1';
+          glare.style.transform = `translate(${rotateY * -3}%, ${rotateX * -3}%) rotate(30deg)`;
+        }
+      });
+      
+      slide.addEventListener('mouseleave', () => {
+        if (window.innerWidth < 768) return;
+        if (!slide.classList.contains('active')) return;
+        
+        slide.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        slide.style.transform = `translate(-50%, -50%) rotateX(0deg) rotateY(0deg) scale(1)`;
+        
+        if(content) {
+          content.style.transform = `translateZ(30px) translateX(0) translateY(0)`;
+        }
+        if(glare) {
+          glare.style.opacity = '0';
         }
       });
     });
