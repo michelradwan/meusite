@@ -849,7 +849,7 @@ section{
   position: relative;
   max-width: 960px;
   margin: 0 auto;
-  height: 480px;
+  height: 560px;
   perspective: 1200px;  /* 3D depth for cinematic feel */
   z-index: 2;
 }
@@ -865,13 +865,12 @@ section{
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0; bottom: 0; left: 0; right: 0;
+  margin: auto;
   width: 84%;
   max-width: 580px;
-  height: auto;
-  min-height: 380px;
-  transform: translate(-50%, -50%) translateX(100%) rotateY(-45deg) scale(0.7);
+  height: 420px;
+  transform: translateX(100%) rotateY(-45deg) scale(0.7);
   opacity: 0;
   pointer-events: none;
   /* NO overflow: hidden here so translateZ can pop out */
@@ -928,13 +927,6 @@ section{
   z-index: 1;
 }
 
-/* CONTENT WRAPPER for parallax */
-.proof-card-content {
-  position: relative;
-  z-index: 2;
-  transform: translateZ(30px); /* Lifts content off the glass */
-  transition: transform 0.1s ease-out;
-}
 
 .proof-quote-icon {
   width: 32px;
@@ -978,9 +970,9 @@ section{
 
 /* Spring entrance keyframe */
 @keyframes cardPunchIn {
-  0%   { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(0.85); }
-  60%  { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1.02); }
-  100% { transform: translate(-50%,-50%) translateX(0) rotateY(0) scale(1); }
+  0%   { transform: translateX(0) rotateY(0) scale(0.85); }
+  60%  { transform: translateX(0) rotateY(0) scale(1.02); }
+  100% { transform: translateX(0) rotateY(0) scale(1); }
 }
 .proof-card.entering {
   animation: cardPunchIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
@@ -992,7 +984,7 @@ section{
 /* ── COVERFLOW STATES ── */
 
 .proof-card.active {
-  transform: translate(-50%, -50%) translateX(0) rotateY(0deg) scale(1) !important;
+  transform: translateX(0) rotateY(0deg) scale(1) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   z-index: 3;
@@ -1006,7 +998,7 @@ section{
 }
 
 .proof-card.prev {
-  transform: translate(-50%, -50%) translateX(-55%) rotateY(35deg) scale(0.8) !important;
+  transform: translateX(-55%) rotateY(35deg) scale(0.8) !important;
   opacity: 0.4 !important;
   pointer-events: auto !important;
   z-index: 2;
@@ -1015,12 +1007,12 @@ section{
 }
 .proof-card.prev:hover {
   opacity: 0.6 !important;
-  transform: translate(-50%, -50%) translateX(-52%) rotateY(25deg) scale(0.85) !important;
+  transform: translateX(-52%) rotateY(25deg) scale(0.85) !important;
   filter: blur(0px);
 }
 
 .proof-card.next {
-  transform: translate(-50%, -50%) translateX(55%) rotateY(-35deg) scale(0.8) !important;
+  transform: translateX(55%) rotateY(-35deg) scale(0.8) !important;
   opacity: 0.4 !important;
   pointer-events: auto !important;
   z-index: 2;
@@ -1029,18 +1021,18 @@ section{
 }
 .proof-card.next:hover {
   opacity: 0.6 !important;
-  transform: translate(-50%, -50%) translateX(52%) rotateY(-25deg) scale(0.85) !important;
+  transform: translateX(52%) rotateY(-25deg) scale(0.85) !important;
   filter: blur(0px);
 }
 
 .proof-card.hidden-prev {
-  transform: translate(-50%, -50%) translateX(-120%) rotateY(60deg) scale(0.6) !important;
+  transform: translateX(-120%) rotateY(60deg) scale(0.6) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translate(-50%, -50%) translateX(120%) rotateY(-60deg) scale(0.6) !important;
+  transform: translateX(120%) rotateY(-60deg) scale(0.6) !important;
   opacity: 0 !important;
   pointer-events: none !important;
   z-index: 1;
@@ -1087,19 +1079,19 @@ section{
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .proof-header h2 { font-size: 2.2rem; }
-  .proof-carousel-container { height: 500px; perspective: none; }
-  .proof-card { padding: 32px; width: 94%; border-radius: 24px; transform-style: flat; }
+  .proof-carousel-container { height: 580px; perspective: none; }
+  .proof-card { height: 440px; width: 94%; transform-style: flat; }
   .proof-quote { font-size: 1.1rem; }
-  .proof-card-content { transform: none; }
+  .proof-card-content { transform: none; padding: 32px; }
   /* Mobile: single card, no Coverflow */
   .proof-card.prev, .proof-card.next,
   .proof-card.hidden-prev, .proof-card.hidden-next {
     opacity: 0 !important;
     pointer-events: none !important;
-    transform: translate(-50%, -50%) scale(0.95) !important;
+    transform: scale(0.95) !important;
   }
   .proof-card.active {
-    transform: translate(-50%, -50%) scale(1) !important;
+    transform: scale(1) !important;
     opacity: 1 !important;
   }
   .proof-card.entering {
@@ -3492,7 +3484,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rotateY = ((x - centerX) / centerX) * 8;
         
         slide.style.transition = 'transform 0.1s ease-out';
-        slide.style.transform = `translate(-50%, -50%) perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        slide.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
         
         if(content) {
           content.style.transform = `translateZ(40px) translateX(${rotateY * -0.5}px) translateY(${rotateX * 0.5}px)`;
@@ -3509,7 +3501,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!slide.classList.contains('active')) return;
         
         slide.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        slide.style.transform = `translate(-50%, -50%) rotateX(0deg) rotateY(0deg) scale(1)`;
+        slide.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
         
         if(content) {
           content.style.transform = `translateZ(30px) translateX(0) translateY(0)`;
