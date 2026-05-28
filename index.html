@@ -24,6 +24,8 @@
   --mock-brand: #E63946;
   --mock-brand-dark: #C1121F;
   --mock-bg: #FFF8F0;
+  --flash-center: var(--dark);
+  --flash-edge: rgba(255,255,255,0.4);
 }
 /* TYPEWRITER ANIMATION */
 .typewriter-text {
@@ -638,7 +640,7 @@ section{
   margin-bottom:10px;
 }
 .stat-block:hover .stat-n {
-  background: radial-gradient(circle 100px at var(--numX, 50%) var(--numY, 50%), #ffffff 0%, rgba(255,255,255,0.2) 100%);
+  background: radial-gradient(circle 100px at var(--numX, 50%) var(--numY, 50%), var(--flash-center) 0%, var(--flash-edge) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
@@ -1682,6 +1684,10 @@ footer a:hover{color:white;}
        LUXURY MIDNIGHT DARK THEME 
        ========================================================== */
     [data-theme="dark"] {
+      --flash-center: #FFFFFF;
+      --flash-edge: rgba(255,255,255,0.2);
+    }
+    [data-theme="dark"] body {
       --ice: #080c14;
       --ice2: #0d1220;
       --white: #0a0f1a;
