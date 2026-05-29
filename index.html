@@ -830,119 +830,158 @@ section{
   color: var(--text-mid);
   line-height: 1.6;
 }
-.proof-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
+/* HUMAN TESTIMONIALS SLIDER */
+.human-proof-slider-container {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  position: relative;
+  padding: 0 10px;
   z-index: 2;
 }
-.proof-carousel-container {
+
+.human-proof-slider-wrapper {
+  overflow: hidden;
+  width: 100%;
+  padding: 10px 0 30px;
+}
+
+.human-proof-slider-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.human-proof-card {
+  flex: 0 0 calc(33.333% - 16px);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(26, 110, 255, 0.015);
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
   position: relative;
-  max-width: 1000px;
-  margin: 0 auto;
-  perspective: 1200px;
-  height: 480px;
+}
+
+.human-proof-card:hover {
+  border-color: rgba(26, 110, 255, 0.25);
+  box-shadow: 0 15px 40px rgba(26, 110, 255, 0.06);
+  transform: translateY(-4px);
+}
+
+.human-proof-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(26, 110, 255, 0.06);
+  color: var(--blue);
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.human-proof-quote-icon {
+  font-family: 'Lora', serif;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: var(--blue);
+  opacity: 0.12;
+  position: absolute;
+  top: 15px;
+  right: 32px;
+  pointer-events: none;
+}
+
+.human-proof-quote-text {
+  font-size: 0.98rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+  margin-bottom: 30px;
+  font-style: normal;
+  flex-grow: 1;
+}
+
+.human-proof-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  margin-top: auto;
+}
+
+.human-proof-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.human-proof-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(26, 110, 255, 0.08);
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
 }
-.proof-carousel {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
+
+.human-proof-meta h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 2px;
 }
-.proof-card {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 40px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+.human-proof-meta p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.human-proof-metric {
+  background: var(--ice);
+  padding: 12px 16px;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s, border-color 0.7s, opacity 0.7s, z-index 0.7s step-end;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 90%;
-  max-width: 580px;
-  transform: translate3d(-50%, -50%, 0);
-  opacity: 0;
-  overflow: hidden;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.proof-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at top right, rgba(26, 110, 255, 0.08), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.6s;
-  pointer-events: none;
-}
-.proof-card:hover::before {
-  opacity: 1;
+  gap: 2px;
 }
 
-/* CAROUSEL STATES */
-.proof-card.active {
-  transform: translate3d(-50%, -50%, 0) scale(1);
-  opacity: 1;
-  z-index: 3;
-  border-color: rgba(26, 110, 255, 0.3);
-  box-shadow: 0 40px 100px rgba(26, 110, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 40px rgba(26, 110, 255, 0.1);
-}
-.proof-card.prev {
-  transform: translate3d(-80%, -50%, -100px) scale(0.85) rotateY(15deg);
-  opacity: 0.5;
-  z-index: 2;
-  cursor: pointer;
-}
-.proof-card.prev:hover {
-  opacity: 0.8;
-  transform: translate3d(-82%, -50%, -80px) scale(0.88) rotateY(10deg);
-}
-.proof-card.next {
-  transform: translate3d(-20%, -50%, -100px) scale(0.85) rotateY(-15deg);
-  opacity: 0.5;
-  z-index: 2;
-  cursor: pointer;
-}
-.proof-card.next:hover {
-  opacity: 0.8;
-  transform: translate3d(-18%, -50%, -80px) scale(0.88) rotateY(-10deg);
-}
-.proof-card.hidden-prev {
-  transform: translate3d(-100%, -50%, -250px) scale(0.7) rotateY(25deg);
-  opacity: 0;
-  z-index: 1;
-}
-.proof-card.hidden-next {
-  transform: translate3d(0%, -50%, -250px) scale(0.7) rotateY(-25deg);
-  opacity: 0;
-  z-index: 1;
+.human-proof-metric-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--blue);
 }
 
-.carousel-nav {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
+.human-proof-metric-lbl {
+  font-size: 0.75rem;
+  color: var(--text-mid);
+}
+
+/* Slider Controls */
+.human-slider-controls {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
   z-index: 10;
+  position: relative;
 }
-.carousel-btn {
-  width: 50px;
-  height: 50px;
+
+.human-slider-btn {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--white);
   border: 1px solid var(--border);
@@ -951,72 +990,81 @@ section{
   justify-content: center;
   color: var(--text);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
-.carousel-btn:hover {
-  background: rgba(26, 110, 255, 0.05);
-  border-color: rgba(26, 110, 255, 0.3);
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 10px 20px rgba(26, 110, 255, 0.1), 0 0 15px rgba(26, 110, 255, 0.05);
+
+.human-slider-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--blue);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(26, 110, 255, 0.08);
 }
-.carousel-btn svg {
-  width: 22px;
-  height: 22px;
+
+.human-slider-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.human-slider-btn svg {
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
-  stroke-width: 2;
+  stroke-width: 2.5;
   fill: none;
 }
 
-@media (max-width: 768px) {
-  .proof-carousel-container { height: 420px; }
-  .proof-card { padding: 30px; }
-  .proof-card.prev { transform: translate3d(-70%, -50%, -100px) scale(0.8) rotateY(10deg); }
-  .proof-card.next { transform: translate3d(-30%, -50%, -100px) scale(0.8) rotateY(-10deg); }
-}
-.proof-quote {
-  font-size: 1.15rem;
-  color: var(--text);
-  line-height: 1.7;
-  font-weight: 400;
-  margin-bottom: 30px;
-  position: relative;
-  z-index: 1;
-}
-.proof-quote strong {
-  color: var(--dark);
-  font-weight: 600;
-}
-.proof-author {
-  margin-top: auto;
+.human-slider-dots {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-  z-index: 1;
+  gap: 8px;
 }
-.proof-avatar {
-  width: 48px;
-  height: 48px;
+
+.human-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--ice);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.proof-meta h4 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--dark);
-  margin-bottom: 3px;
+
+.human-dot.active {
+  background: var(--blue);
+  width: 24px;
+  border-radius: 100px;
 }
-.proof-meta p {
-  font-size: 0.8rem;
-  color: var(--text-mid);
-  letter-spacing: 0.5px;
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .human-proof-card {
+  background: rgba(255, 255, 255, 0.015) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .human-proof-card:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(26, 110, 255, 0.05);
+}
+
+[data-theme="dark"] .human-proof-metric {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .human-proof-card {
+    flex: 0 0 calc(50% - 12px);
+    padding: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .human-proof-card {
+    flex: 0 0 100%;
+    padding: 28px;
+  }
+  .human-slider-controls {
+    margin-top: 30px;
+  }
 }
 
 /* CTA */
@@ -2620,6 +2668,90 @@ footer a:hover{color:white;}
     <p>Histórias reais de negócios que deixaram de ser invisíveis e começaram a dominar suas regiões no digital.</p>
   </div>
 
+  <div class="human-proof-slider-container reveal">
+    <div class="human-proof-slider-wrapper">
+      <div class="human-proof-slider-track" id="proofSliderTrack">
+        
+        <!-- Card 1: Fisioterapeuta -->
+        <div class="human-proof-card">
+          <div class="human-proof-badge">Fisioterapia Local</div>
+          <div class="human-proof-quote-icon">“</div>
+          <p class="human-proof-quote-text">
+            Eu achava que ter uma conta no Instagram era suficiente. Mas os pacientes que vinham de lá sempre choravam preço. Quando o Michel estruturou o meu site com foco no Google local, tudo mudou. Na primeira semana com o site no ar, fechei 4 tratamentos completos com pessoas que me acharam no Google pesquisando por 'fisioterapia especializada'. O site se pagou em 10 dias.
+          </p>
+          <div class="human-proof-footer">
+            <div class="human-proof-author">
+              <div class="human-proof-avatar">LH</div>
+              <div class="human-proof-meta">
+                <h4>Dr. Lucas Henrique</h4>
+                <p>Clínica de Fisioterapia</p>
+              </div>
+            </div>
+            <div class="human-proof-metric">
+              <span class="human-proof-metric-val">ROI em 10 dias</span>
+              <span class="human-proof-metric-lbl">+22 novos pacientes no 1º mês</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 2: Boutique Bella -->
+        <div class="human-proof-card">
+          <div class="human-proof-badge">Loja Física &amp; Condicional</div>
+          <div class="human-proof-quote-icon">“</div>
+          <p class="human-proof-quote-text">
+            O meu maior erro era vender apenas pelo direct do Instagram. Dava um trabalho gigante responder todo mundo e muitos desistiam. Com o site de alta conversão que o Michel criou, apresentando a loja de forma profissional e com botão direto de agendamento de condicional, as clientes agora chegam prontas para comprar. A credibilidade da minha loja física triplicou.
+          </p>
+          <div class="human-proof-footer">
+            <div class="human-proof-author">
+              <div class="human-proof-avatar" style="background: rgba(236, 72, 153, 0.08); color: #ec4899;">MS</div>
+              <div class="human-proof-meta">
+                <h4>Mariana Souza</h4>
+                <p>Boutique Bella Moda</p>
+              </div>
+            </div>
+            <div class="human-proof-metric">
+              <span class="human-proof-metric-val">+35% no Ticket Médio</span>
+              <span class="human-proof-metric-lbl">Redução de 70% no tempo de atendimento</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 3: Advocacia -->
+        <div class="human-proof-card">
+          <div class="human-proof-badge">Serviço Premium</div>
+          <div class="human-proof-quote-icon">“</div>
+          <p class="human-proof-quote-text">
+            Advogado depende de indicação, certo? Eu também achava isso. Mas quando decidi focar em direito societário para startups, percebi que precisava de uma presença séria. O site feito pelo Michel passa exatamente a autoridade que um fundador de startup procura antes de nos contratar. Já fechamos dois contratos de assessoria mensal recorrente vindos diretamente do formulário do site.
+          </p>
+          <div class="human-proof-footer">
+            <div class="human-proof-author">
+              <div class="human-proof-avatar" style="background: rgba(217, 119, 6, 0.08); color: #d97706;">RA</div>
+              <div class="human-proof-meta">
+                <h4>Dr. Roberto Alves</h4>
+                <p>Alves &amp; Associados</p>
+              </div>
+            </div>
+            <div class="human-proof-metric">
+              <span class="human-proof-metric-val">Recorrência Mensal</span>
+              <span class="human-proof-metric-lbl">2 contratos de assessoria fechados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- Slider Controls -->
+    <div class="human-slider-controls">
+      <button class="human-slider-btn prev" id="proofPrevBtn" aria-label="Anterior">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="human-slider-dots" id="proofSliderDots"></div>
+      <button class="human-slider-btn next" id="proofNextBtn" aria-label="Próximo">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
 </section>
 
 <!-- FAQ -->
@@ -3369,6 +3501,189 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.15 });
 
   document.querySelectorAll('.word-reveal').forEach(el => textObserver.observe(el));
+
+  // =====================
+  // HUMAN TESTIMONIALS SLIDER JS
+  // =====================
+  const track = document.getElementById('proofSliderTrack');
+  const cards = document.querySelectorAll('.human-proof-card');
+  const prevBtn = document.getElementById('proofPrevBtn');
+  const nextBtn = document.getElementById('proofNextBtn');
+  const dotsContainer = document.getElementById('proofSliderDots');
+  
+  if (track && cards.length > 0) {
+    let currentIndex = 0;
+    
+    // Calculate total slides based on visible cards
+    function getCardsPerView() {
+      if (window.innerWidth > 992) return 3;
+      if (window.innerWidth > 640) return 2;
+      return 1;
+    }
+    
+    function getMaxIndex() {
+      const cardsPerView = getCardsPerView();
+      return Math.max(0, cards.length - cardsPerView);
+    }
+    
+    // Re-generate dots based on maximum slide index
+    function updateDots() {
+      if (!dotsContainer) return;
+      dotsContainer.innerHTML = '';
+      const maxIdx = getMaxIndex();
+      
+      // If no scrolling is needed, hide controls/dots
+      if (maxIdx === 0) {
+        dotsContainer.style.display = 'none';
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        return;
+      } else {
+        dotsContainer.style.display = 'flex';
+        if (prevBtn) prevBtn.style.display = 'flex';
+        if (nextBtn) nextBtn.style.display = 'flex';
+      }
+      
+      for (let i = 0; i <= maxIdx; i++) {
+        const dot = document.createElement('span');
+        dot.className = `human-dot ${i === currentIndex ? 'active' : ''}`;
+        dot.addEventListener('click', () => {
+          goToSlide(i);
+        });
+        dotsContainer.appendChild(dot);
+      }
+    }
+    
+    function updateSlider() {
+      const maxIdx = getMaxIndex();
+      
+      // Clamp currentIndex to valid range
+      if (currentIndex > maxIdx) currentIndex = maxIdx;
+      if (currentIndex < 0) currentIndex = 0;
+      
+      // Enable/disable buttons
+      if (prevBtn) prevBtn.disabled = currentIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentIndex === maxIdx;
+      
+      // Calculate translate amount
+      // Get card width and gap dynamically to prevent rounding issues
+      const cardWidth = cards[0].getBoundingClientRect().width;
+      const style = window.getComputedStyle(track);
+      const gap = parseFloat(style.gap) || 24;
+      
+      const translateVal = currentIndex * (cardWidth + gap);
+      
+      // 120 FPS hardware-accelerated translation
+      track.style.transform = `translate3d(-${translateVal}px, 0, 0)`;
+      
+      // Update dots active class
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.human-dot');
+        dots.forEach((dot, idx) => {
+          if (idx === currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    }
+    
+    function goToSlide(index) {
+      currentIndex = index;
+      updateSlider();
+    }
+    
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateSlider();
+        }
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        const maxIdx = getMaxIndex();
+        if (currentIndex < maxIdx) {
+          currentIndex++;
+          updateSlider();
+        }
+      });
+    }
+    
+    // Touch support for mobile dragging (smooth 120fps)
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let initialTranslate = 0;
+    
+    track.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      track.style.transition = 'none'; // Disable transition for 1:1 dragging response
+      
+      const cardWidth = cards[0].getBoundingClientRect().width;
+      const style = window.getComputedStyle(track);
+      const gap = parseFloat(style.gap) || 24;
+      initialTranslate = -currentIndex * (cardWidth + gap);
+    }, { passive: true });
+    
+    track.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      currentX = e.touches[0].clientX;
+      const diff = currentX - startX;
+      
+      // Apply translate with some resistance at the bounds
+      let targetTranslate = initialTranslate + diff;
+      const maxIdx = getMaxIndex();
+      const cardWidth = cards[0].getBoundingClientRect().width;
+      const gap = parseFloat(window.getComputedStyle(track).gap) || 24;
+      const minTranslate = -maxIdx * (cardWidth + gap);
+      
+      if (targetTranslate > 0) {
+        targetTranslate = diff * 0.3; // resistance
+      } else if (targetTranslate < minTranslate) {
+        targetTranslate = minTranslate + (diff * 0.3); // resistance
+      }
+      
+      track.style.transform = `translate3d(${targetTranslate}px, 0, 0)`;
+    }, { passive: true });
+    
+    track.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      track.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+      
+      const diff = currentX - startX;
+      const cardWidth = cards[0].getBoundingClientRect().width;
+      const gap = parseFloat(window.getComputedStyle(track).gap) || 24;
+      const threshold = (cardWidth + gap) * 0.25; // 25% of card width is threshold
+      
+      if (diff < -threshold && currentIndex < getMaxIndex()) {
+        currentIndex++;
+      } else if (diff > threshold && currentIndex > 0) {
+        currentIndex--;
+      }
+      
+      updateSlider();
+    });
+    
+    // Listen to resize to recalculate slider parameters and dots
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        updateDots();
+        updateSlider();
+      }, 150);
+    });
+    
+    // Initial setup
+    updateDots();
+    updateSlider();
+  }
 });
 
 </script>
