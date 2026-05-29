@@ -821,13 +821,9 @@ section{
   color: var(--dark);
 }
 .proof-header h2 em {
-  /* Override the global em shimmer — keep solid blue text here */
-  color: var(--blue) !important;
+  color: var(--blue);
   font-style: italic;
   font-weight: 400;
-  background-image: none !important;
-  -webkit-text-fill-color: var(--blue) !important;
-  animation: none !important;
 }
 .proof-header p {
   font-size: 1.05rem;
@@ -843,260 +839,184 @@ section{
   position: relative;
   z-index: 2;
 }
-.proof-header p { font-size: 1.15rem; color: var(--text); max-width: 600px; margin: 0 auto; line-height: 1.6; }
-
 .proof-carousel-container {
   position: relative;
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
-  height: 560px;
-  perspective: 1200px;  /* 3D depth for cinematic feel */
+  perspective: 1200px;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
 }
 .proof-carousel {
   position: relative;
   width: 100%;
   height: 100%;
-}
-
-/* ── CARD BASE ── */
-.proof-card {
-  /* No background or border on the parent wrapper */
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0; bottom: 0; left: 0; right: 0;
-  margin: auto;
-  width: 84%;
-  max-width: 580px;
-  height: 420px;
-  transform: translateX(100%) rotateY(-45deg) scale(0.7);
-  opacity: 0;
-  pointer-events: none;
-  /* NO overflow: hidden here so translateZ can pop out */
-  will-change: transform, opacity;
-  transition:
-    transform  0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    opacity    0.6s ease;
   transform-style: preserve-3d;
 }
-
-/* ── GLASS BACKGROUND ── */
-.proof-card-glass {
+.proof-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 24px 50px rgba(26, 110, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s, border-color 0.7s, opacity 0.7s, z-index 0.7s step-end;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 580px;
+  transform: translate3d(-50%, -50%, 0);
+  opacity: 0;
+  overflow: hidden;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.proof-card::before {
+  content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 32px;
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.04), 
-    inset 0 1px 0 rgba(255,255,255,1),
-    inset 0 0 20px rgba(255,255,255,0.5);
-  overflow: hidden; /* Clips the glare overlay safely */
-  z-index: 1;
-  transition: box-shadow 0.6s ease, border-color 0.6s ease;
-}
-
-/* CONTENT WRAPPER for parallax */
-.proof-card-content {
-  position: relative;
-  z-index: 2;
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transform: translateZ(40px); /* Lifts content off the glass */
-  transition: transform 0.1s ease-out;
-  transform-style: preserve-3d;
-}
-
-/* GLARE OVERLAY for 4D effect */
-.glare-overlay {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-  transform: rotate(30deg) translate(0, 0);
+  background: radial-gradient(circle at top right, rgba(26, 110, 255, 0.08), transparent 60%);
   opacity: 0;
+  transition: opacity 0.6s;
   pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1;
+}
+.proof-card:hover::before {
+  opacity: 1;
 }
 
-
-.proof-quote-icon {
-  width: 32px;
-  height: 32px;
-  fill: var(--blue);
-  opacity: 0.2;
-  margin-bottom: 24px;
-}
-
-.proof-quote {
-  font-size: 1.25rem;
-  color: var(--dark);
-  line-height: 1.6;
-  font-weight: 400;
-  margin-bottom: 32px;
-  letter-spacing: -0.01em;
-}
-.proof-quote strong {
-  font-weight: 600;
-  color: var(--blue);
-}
-
-.proof-author {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: auto;
-}
-.proof-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  flex-shrink: 0;
-}
-.proof-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.proof-meta h4 { font-size: 1.05rem; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
-.proof-meta p { font-size: 0.9rem; color: var(--text); opacity: 0.8; }
-
-/* Spring entrance keyframe */
-@keyframes cardPunchIn {
-  0%   { transform: translateX(0) rotateY(0) scale(0.85); }
-  60%  { transform: translateX(0) rotateY(0) scale(1.02); }
-  100% { transform: translateX(0) rotateY(0) scale(1); }
-}
-.proof-card.entering {
-  animation: cardPunchIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  z-index: 3;
-}
-
-/* ── COVERFLOW STATES ── */
-
+/* CAROUSEL STATES */
 .proof-card.active {
-  transform: translateX(0) rotateY(0deg) scale(1) !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  opacity: 1;
   z-index: 3;
+  border-color: rgba(26, 110, 255, 0.3);
+  box-shadow: 0 40px 100px rgba(26, 110, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 40px rgba(26, 110, 255, 0.1);
 }
-.proof-card.active .proof-card-glass {
-  border-color: rgba(26,110,255,0.4);
-  box-shadow:
-    0 40px 100px rgba(26,110,255,0.15),
-    inset 0 1px 0 rgba(255,255,255,1),
-    0 0 0 1px rgba(26,110,255,0.1);
-}
-
 .proof-card.prev {
-  transform: translateX(-55%) rotateY(35deg) scale(0.8) !important;
-  opacity: 0.4 !important;
-  pointer-events: auto !important;
+  transform: translate3d(-80%, -50%, -100px) scale(0.85) rotateY(15deg);
+  opacity: 0.5;
   z-index: 2;
   cursor: pointer;
-  filter: blur(2px);
 }
 .proof-card.prev:hover {
-  opacity: 0.6 !important;
-  transform: translateX(-52%) rotateY(25deg) scale(0.85) !important;
-  filter: blur(0px);
+  opacity: 0.8;
+  transform: translate3d(-82%, -50%, -80px) scale(0.88) rotateY(10deg);
 }
-
 .proof-card.next {
-  transform: translateX(55%) rotateY(-35deg) scale(0.8) !important;
-  opacity: 0.4 !important;
-  pointer-events: auto !important;
+  transform: translate3d(-20%, -50%, -100px) scale(0.85) rotateY(-15deg);
+  opacity: 0.5;
   z-index: 2;
   cursor: pointer;
-  filter: blur(2px);
 }
 .proof-card.next:hover {
-  opacity: 0.6 !important;
-  transform: translateX(52%) rotateY(-25deg) scale(0.85) !important;
-  filter: blur(0px);
+  opacity: 0.8;
+  transform: translate3d(-18%, -50%, -80px) scale(0.88) rotateY(-10deg);
 }
-
 .proof-card.hidden-prev {
-  transform: translateX(-120%) rotateY(60deg) scale(0.6) !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  transform: translate3d(-100%, -50%, -250px) scale(0.7) rotateY(25deg);
+  opacity: 0;
   z-index: 1;
 }
 .proof-card.hidden-next {
-  transform: translateX(120%) rotateY(-60deg) scale(0.6) !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  transform: translate3d(0%, -50%, -250px) scale(0.7) rotateY(-25deg);
+  opacity: 0;
   z-index: 1;
 }
 
-/* ── NAV BUTTONS ── */
 .carousel-nav {
   position: absolute;
   bottom: -40px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 16px;
+  gap: 20px;
   z-index: 10;
 }
 .carousel-btn {
-  width: 48px; height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.8);
-  border: 1px solid rgba(255,255,255,1);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--dark);
+  background: var(--white);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 .carousel-btn:hover {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: #fff;
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 12px 24px rgba(26,110,255,0.3);
-}
-.carousel-btn:active {
-  transform: scale(0.95);
+  background: rgba(26, 110, 255, 0.05);
+  border-color: rgba(26, 110, 255, 0.3);
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 10px 20px rgba(26, 110, 255, 0.1), 0 0 15px rgba(26, 110, 255, 0.05);
 }
 .carousel-btn svg {
-  width: 20px; height: 20px;
-  stroke: currentColor; stroke-width: 2.5; fill: none;
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .proof-header h2 { font-size: 2.2rem; }
-  .proof-carousel-container { height: 580px; perspective: none; }
-  .proof-card { height: 440px; width: 94%; transform-style: flat; }
-  .proof-quote { font-size: 1.1rem; }
-  .proof-card-content { transform: none; padding: 32px; }
-  /* Mobile: single card, no Coverflow */
-  .proof-card.prev, .proof-card.next,
-  .proof-card.hidden-prev, .proof-card.hidden-next {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transform: scale(0.95) !important;
-  }
-  .proof-card.active {
-    transform: scale(1) !important;
-    opacity: 1 !important;
-  }
-  .proof-card.entering {
-    animation: cardPunchIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
-  }
+  .proof-carousel-container { height: 420px; }
+  .proof-card { padding: 30px; }
+  .proof-card.prev { transform: translate3d(-70%, -50%, -100px) scale(0.8) rotateY(10deg); }
+  .proof-card.next { transform: translate3d(-30%, -50%, -100px) scale(0.8) rotateY(-10deg); }
+}
+.proof-quote {
+  font-size: 1.15rem;
+  color: var(--text);
+  line-height: 1.7;
+  font-weight: 400;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+}
+.proof-quote strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+.proof-author {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+.proof-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ice);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.proof-meta h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 3px;
+}
+.proof-meta p {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  letter-spacing: 0.5px;
 }
 
 /* CTA */
@@ -2694,10 +2614,7 @@ footer a:hover{color:white;}
 </section>
 
 <!-- PROOF -->
-<section class="proof-section" id="proof">
-  <!-- Glowing Background -->
-  <div class="proof-glow-bg"></div>
-
+<section class="proof-section">
   <div class="proof-header reveal">
     <h2>O <em>impacto</em> de um site profissional</h2>
     <p>Histórias reais de negócios que deixaram de ser invisíveis e começaram a dominar suas regiões no digital.</p>
@@ -2707,148 +2624,112 @@ footer a:hover{color:white;}
     <div class="proof-carousel">
       <!-- Card 1 -->
       <div class="proof-card proof-slide">
-        <!-- O vidro e o glare ficam contidos aqui com overflow:hidden -->
-        <div class="proof-card-glass">
-          <div class="glare-overlay"></div>
-        </div>
-        <!-- O conteúdo fica livre para flutuar em 3D (translateZ) -->
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "Fui na base do custo-benefício. Estava com medo de investir e não ver retorno. Mas no terceiro mês, <strong>minha agenda de fotografia estava lotada de clientes novos que me encontraram no Google</strong>. Nunca pensei que um site fizesse tanta diferença assim."
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Fernanda+Lopes&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Fernanda Lopes"></div>
-            <div class="proof-meta">
-              <h4>Fernanda Lopes</h4>
-              <p>Fotógrafa de casamentos, Campinas · SP</p>
-            </div>
+        <p class="proof-quote">
+          "Fui na base do custo-benefício. Estava com medo de investir e não ver retorno. Mas no terceiro mês, <strong>minha agenda de fotografia estava lotada de clientes novos que me encontraram no Google</strong>. Nunca pensei que um site fizesse tanta diferença assim."
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">📷</div>
+          <div class="proof-meta">
+            <h4>Fernanda Lopes</h4>
+            <p>Fotógrafa de casamentos, Campinas · SP</p>
           </div>
         </div>
       </div>
 
       <!-- Card 2 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "Honestamente? Fiquei com receio no começo, achei que ia ser complicado. Mas o processo foi bem tranquilo, ele foi tirando minhas dúvidas no WhatsApp. <strong>Em 6 dias o site já estava no ar.</strong> Meu vizinho perguntou qual agência tinha feito."
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Thiago+Braga&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Thiago Braga"></div>
-            <div class="proof-meta">
-              <h4>Thiago Braga</h4>
-              <p>Eletricista autônomo, Goiânia · GO</p>
-            </div>
+        <p class="proof-quote">
+          "Honestamente? Fiquei com receio no começo, achei que ia ser complicado. Mas o processo foi bem tranquilo, ele foi tirando minhas dúvidas no WhatsApp. <strong>Em 6 dias o site já estava no ar.</strong> Meu vizinho perguntou qual agência tinha feito."
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">🔧</div>
+          <div class="proof-meta">
+            <h4>Thiago Braga</h4>
+            <p>Eletricista autônomo, Goiânia · GO</p>
           </div>
         </div>
       </div>
 
       <!-- Card 3 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "A minha cliente de 68 anos entrou no meu Instagram, viu o link do site e me mandou mensagem dizendo que parecia o site de uma clínica grande mesmo. Isso pra mim vale mais do que qualquer número. <strong>Profissionalismo muda como as pessoas te enxergam.</strong>"
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Juliana+Freitas&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Juliana Freitas"></div>
-            <div class="proof-meta">
-              <h4>Juliana Freitas</h4>
-              <p>Terapeuta holística, Florianópolis · SC</p>
-            </div>
+        <p class="proof-quote">
+          "A minha cliente de 68 anos entrou no meu Instagram, viu o link do site e me mandou mensagem dizendo que parecia o site de uma clínica grande mesmo. Isso pra mim vale mais do que qualquer número. <strong>Profissionalismo muda como as pessoas te enxergam.</strong>"
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">💆</div>
+          <div class="proof-meta">
+            <h4>Juliana Freitas</h4>
+            <p>Terapeuta holística, Florianópolis · SC</p>
           </div>
         </div>
       </div>
 
       <!-- Card 4 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "Pagava mensalidade pro iFood e ainda ficava rehém do algoritmo deles. Fiz o site, configurei o WhatsApp e hoje <strong>atendo mais pedidos sem pagar comissão nenhuma.</strong> No mês passado economizei quase R$800 em taxa. Isso é lucro direto no meu bolso."
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Cristiano+Souza&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Cristiano Souza"></div>
-            <div class="proof-meta">
-              <h4>Cristiano Souza</h4>
-              <p>Hamburgueria artesanal, Recife · PE</p>
-            </div>
+        <p class="proof-quote">
+          "Pagava mensalidade pro iFood e ainda ficava rehém do algoritmo deles. Fiz o site, configurei o WhatsApp e hoje <strong>atendo mais pedidos sem pagar comissão nenhuma.</strong> No mês passado economizei quase R$800 em taxa. Isso é lucro direto no meu bolso."
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">🍔</div>
+          <div class="proof-meta">
+            <h4>Cristiano Souza</h4>
+            <p>Hamburgueria artesanal, Recife · PE</p>
           </div>
         </div>
       </div>
 
       <!-- Card 5 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "Trabalho com contabilidade faz 12 anos. Sempre peguei cliente por indicação. Mas quando um desconhecido me encontrou no Google e disse que meu site 'passava mais confiança que os outros' — <strong>entendi que tinha perdido anos sem isso.</strong>"
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Eduardo+Ramos&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Eduardo Ramos"></div>
-            <div class="proof-meta">
-              <h4>Eduardo Ramos</h4>
-              <p>Contador, Porto Alegre · RS</p>
-            </div>
+        <p class="proof-quote">
+          "Trabalho com contabilidade faz 12 anos. Sempre peguei cliente por indicação. Mas quando um desconhecido me encontrou no Google e disse que meu site 'passava mais confiança que os outros' — <strong>entendi que tinha perdido anos sem isso.</strong>"
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">📊</div>
+          <div class="proof-meta">
+            <h4>Eduardo Ramos</h4>
+            <p>Contador, Porto Alegre · RS</p>
           </div>
         </div>
       </div>
 
       <!-- Card 6 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "Minhas alunas começaram a compartilhar o link do site entre si. Uma trouxe a irmã, a irmã trouxe a cunhada. <strong>Em 2 meses fechei 7 alunas novas só pelo site,</strong> sem postar nada novo no Instagram. A palavra delas foi: 'parece sério, parece de confiança'."
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Patricia+Nunes&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Patricia Nunes"></div>
-            <div class="proof-meta">
-              <h4>Patricia Nunes</h4>
-              <p>Instrutora de pilates, Brasília · DF</p>
-            </div>
+        <p class="proof-quote">
+          "Minhas alunas começaram a compartilhar o link do site entre si. Uma trouxe a irmã, a irmã trouxe a cunhada. <strong>Em 2 meses fechei 7 alunas novas só pelo site,</strong> sem postar nada novo no Instagram. A palavra delas foi: 'parece sério, parece de confiança'."
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">🧘</div>
+          <div class="proof-meta">
+            <h4>Patricia Nunes</h4>
+            <p>Instrutora de pilates, Brasília · DF</p>
           </div>
         </div>
       </div>
 
       <!-- Card 7 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "O cliente chegou no meu salão já sabendo os preços, os horários e que sou especialista em coloração. <strong>Ele já estava 'vendido' antes de entrar pela porta.</strong> Isso é o site trabalhando por mim enquanto eu estava dormindo."
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Vanessa+Torres&background=1A6EFF&color=fff&rounded=true&bold=true" alt="Vanessa Torres"></div>
-            <div class="proof-meta">
-              <h4>Vanessa Torres</h4>
-              <p>Cabeleireira, Santo André · SP</p>
-            </div>
+        <p class="proof-quote">
+          "O cliente chegou no meu salão já sabendo os preços, os horários e que sou especialista em coloração. <strong>Ele já estava 'vendido' antes de entrar pela porta.</strong> Isso é o site trabalhando por mim enquanto eu estava dormindo."
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">✂️</div>
+          <div class="proof-meta">
+            <h4>Vanessa Torres</h4>
+            <p>Cabeleireira, Santo André · SP</p>
           </div>
         </div>
       </div>
 
       <!-- Card 8 -->
       <div class="proof-card proof-slide">
-        <div class="proof-card-glass"><div class="glare-overlay"></div></div>
-        <div class="proof-card-content">
-          <svg class="proof-quote-icon" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-          <p class="proof-quote">
-            "Quando fiz o site com portfólio de obras, <strong>o tipo de cliente mudou completamente.</strong> Hoje atendo obra maior, com melhor margem, e o cliente mal bate no preço. Parece outro mercado. Só mudou o site — o resto sou eu mesmo."
-          </p>
-          <div class="proof-author">
-            <div class="proof-avatar"><img src="https://ui-avatars.com/api/?name=Andre+Machado&background=1A6EFF&color=fff&rounded=true&bold=true" alt="André Machado"></div>
-            <div class="proof-meta">
-              <h4>André Machado</h4>
-              <p>Engenheiro civil autônomo, Curitiba · PR</p>
-            </div>
+        <p class="proof-quote">
+          "Quando fiz o site com portfólio de obras, <strong>o tipo de cliente mudou completamente.</strong> Hoje atendo obra maior, com melhor margem, e o cliente mal bate no preço. Parece outro mercado. Só mudou o site — o resto sou eu mesmo."
+        </p>
+        <div class="proof-author">
+          <div class="proof-avatar">🏗️</div>
+          <div class="proof-meta">
+            <h4>André Machado</h4>
+            <p>Engenheiro civil autônomo, Curitiba · PR</p>
           </div>
         </div>
       </div>
@@ -3412,33 +3293,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateCarousel() {
       slides.forEach((slide, index) => {
-        // Clear any inline styles to avoid cascade conflicts
-        slide.style.transform = '';
-        slide.style.transition = '';
-        slide.style.zIndex = '';
-        slide.classList.remove('active', 'prev', 'next', 'hidden-prev', 'hidden-next', 'entering');
-
-        let role = '';
+        slide.classList.remove('active', 'prev', 'next', 'hidden-prev', 'hidden-next');
+        
         if (index === currentIndex) {
-          role = 'active';
+          slide.classList.add('active');
         } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
-          role = 'prev';
+          slide.classList.add('prev');
         } else if (index === (currentIndex + 1) % slides.length) {
-          role = 'next';
+          slide.classList.add('next');
         } else if (index === (currentIndex - 2 + slides.length) % slides.length) {
-          role = 'hidden-prev';
+          slide.classList.add('hidden-prev');
         } else {
-          role = 'hidden-next';
-        }
-        slide.classList.add(role);
-
-        // Spring entrance animation on newly active card
-        if (role === 'active') {
-          // Briefly add 'entering' for punch-in keyframe, then revert to 'active'
-          slide.classList.add('entering');
-          setTimeout(() => {
-            slide.classList.remove('entering');
-          }, 600);
+          slide.classList.add('hidden-next');
         }
       });
     }
@@ -3461,53 +3327,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (slide.classList.contains('next')) {
           currentIndex = (currentIndex + 1) % slides.length;
           updateCarousel();
-        }
-      });
-      
-      // 4D Cinematic Effect for Active Card
-      const content = slide.querySelector('.proof-card-content');
-      const glare = slide.querySelector('.glare-overlay');
-      
-      slide.addEventListener('mousemove', (e) => {
-        if (window.innerWidth < 768) return;
-        if (!slide.classList.contains('active')) return;
-        
-        const rect = slide.getBoundingClientRect();
-        const x = e.clientX - rect.left; // x position within the element
-        const y = e.clientY - rect.top;  // y position within the element
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        // Calculate rotation (-8 to 8 degrees)
-        const rotateX = ((y - centerY) / centerY) * -8;
-        const rotateY = ((x - centerX) / centerX) * 8;
-        
-        slide.style.transition = 'transform 0.1s ease-out';
-        slide.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-        
-        if(content) {
-          content.style.transform = `translateZ(40px) translateX(${rotateY * -0.5}px) translateY(${rotateX * 0.5}px)`;
-        }
-        
-        if(glare) {
-          glare.style.opacity = '1';
-          glare.style.transform = `translate(${rotateY * -3}%, ${rotateX * -3}%) rotate(30deg)`;
-        }
-      });
-      
-      slide.addEventListener('mouseleave', () => {
-        if (window.innerWidth < 768) return;
-        if (!slide.classList.contains('active')) return;
-        
-        slide.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        slide.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
-        
-        if(content) {
-          content.style.transform = `translateZ(30px) translateX(0) translateY(0)`;
-        }
-        if(glare) {
-          glare.style.opacity = '0';
         }
       });
     });
@@ -3586,25 +3405,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. 3D TILT CARDS
   const tiltCards = document.querySelectorAll('.pain-card, .niche-card, .benefit-box, .stat-block, .included-item, .faq-item, .proof-card, .portfolio-item');
   tiltCards.forEach(card => {
-    // For proof-cards: DON'T set inline transition — let CSS carousel states control it
-    const isProof = card.classList.contains('proof-card');
-    const baseTransition = isProof ? '' : window.getComputedStyle(card).transition;
-    if (!isProof) card.style.transition = baseTransition + ', transform 0.1s ease-out';
+    // Preserve any existing transitions but ensure transform is smooth for tilt
+    const baseTransition = window.getComputedStyle(card).transition;
+    card.style.transition = baseTransition + ', transform 0.1s ease-out';
     
     // Add the tilt-card class for the spotlight CSS
     card.classList.add('tilt-card');
     
     card.addEventListener('mouseenter', () => {
       if (window.innerWidth < 768) return;
-      // proof-cards: skip — CSS class states handle visibility
-      if (isProof) return;
+      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return;
       card.style.zIndex = '50';
     });
 
     card.addEventListener('mousemove', (e) => {
       if (window.innerWidth < 768) return; // Disable on mobile to prevent jitter
-      // proof-cards: skip inline tilt — carousel CSS classes are authoritative
-      if (isProof) return;
+      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return; // Only tilt active carousel card
       
       // Update transition for buttery smooth 120fps tracking
       card.style.transition = baseTransition + ', transform 0.15s cubic-bezier(0.2, 0, 0, 1)';
@@ -3631,17 +3447,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.15, 1.15, 1.15)`;
+      let baseTransform = '';
+      if (card.classList.contains('proof-card')) {
+        baseTransform = 'translate3d(-50%, -50%, 0) ';
+      }
+      
+      card.style.transform = `${baseTransform}perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.15, 1.15, 1.15)`;
     });
     
     card.addEventListener('mouseleave', () => {
       if (window.innerWidth < 768) return;
-      // proof-cards: skip — CSS handles reset
-      if (isProof) return;
+      if (card.classList.contains('proof-card') && !card.classList.contains('active')) return;
       
       card.style.zIndex = '';
       card.style.transition = 'transform 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
-      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      
+      let baseTransform = '';
+      if (card.classList.contains('proof-card')) {
+        baseTransform = 'translate3d(-50%, -50%, 0) ';
+      }
+      
+      card.style.transform = `${baseTransform}perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
       setTimeout(() => {
         card.style.transition = baseTransition + ', transform 0.15s cubic-bezier(0.2, 0, 0, 1)';
       }, 800);
