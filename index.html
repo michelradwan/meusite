@@ -3,8 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Michel Radwan | Sites Profissionais</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<title>Studio Radwan | Design & Desenvolvimento Web Premium</title>
+<!-- SEO & Open Graph Meta Tags -->
+<meta name="description" content="Studio Radwan. Especialistas em design de interfaces de alto nível e desenvolvimento web de ponta. Transforme sua presença digital com velocidade e exclusividade.">
+<meta property="og:title" content="Studio Radwan | Design & Desenvolvimento Web Premium">
+<meta property="og:description" content="Especialistas em design de interfaces de alto nível e desenvolvimento web de ponta.">
+<meta property="og:image" content="logo.png">
+<meta property="og:type" content="website">
+
+<!-- Preload para Carregamento Ultrarrápido -->
+<link rel="preload" as="image" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -105,19 +116,31 @@ nav{
 }
 nav.scrolled{box-shadow:0 4px 30px rgba(26,110,255,0.08);}
 .nav-logo{
-  font-size:1.1rem;font-weight:700;color:var(--dark);
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:12px;
+  color:var(--dark);
+  text-decoration:none;
 }
-.nav-logo span{
-  display:inline-block;
-  width:32px;height:32px;
-  background:var(--blue);
-  border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
+.custom-logo{
+  height:40px;
+  width:auto;
+  object-fit:contain;
+  filter: brightness(0);
 }
-.nav-logo span svg{width:16px;height:16px;fill:white;}
+.nav-logo-text{
+  font-family: 'Sora', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--dark) 0%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 0;
+  margin-right: -4px;
+  transition: all 0.5s ease;
+}
 .nav-cta{
-  background:var(--blue);
+  background:transparent;
   color:white;
   font-size:0.82rem;
   font-weight:600;
@@ -125,13 +148,168 @@ nav.scrolled{box-shadow:0 4px 30px rgba(26,110,255,0.08);}
   border-radius:100px;
   text-decoration:none;
   letter-spacing:0.3px;
-  transition:transform 0.2s,box-shadow 0.2s,background 0.2s;
+  transition:transform 0.2s,box-shadow 0.2s;
   white-space:nowrap;
+  position:relative;
+  overflow:hidden;
+  z-index:1;
+}
+.nav-cta::before{
+  content:''; position:absolute; inset:0;
+  background:var(--blue); z-index:-2;
+  border-radius:100px;
+}
+.nav-cta::after{
+  content:''; position:absolute; top:50%; left:50%;
+  width:0; height:0; background:#25D366; border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:width 0.4s ease-out, height 0.4s ease-out; z-index:-1;
 }
 .nav-cta:hover{
   transform:translateY(-2px);
-  box-shadow:0 8px 25px rgba(26,110,255,0.35);
-  background:#0D5FEE;
+  box-shadow:0 8px 25px rgba(37,211,102,0.35);
+}
+.nav-cta:hover::after{
+  width:300px; height:300px;
+}
+
+
+/* BROWSER REVEAL ARCH EFFECT */
+.browser-reveal-section {
+  position: relative;
+  height: 350vh;
+  width: 100%;
+  background: transparent;
+  z-index: 10;
+  margin-top: -100px;
+}
+.arch-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+}
+.arch-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(10vh) scale(0.85);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+
+/* MINIMAL SCROLL BADGE */
+.minimal-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-mid);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUpPremium 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+.mouse-icon {
+  width: 12px;
+  height: 18px;
+  border: 1.5px solid var(--text-mid);
+  border-radius: 8px;
+  position: relative;
+  display: inline-block;
+  margin-right: 2px;
+}
+.mouse-icon::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 4px;
+  background: var(--text-mid);
+  border-radius: 2px;
+  animation: scrollWheelMini 1.5s infinite;
+}
+@keyframes scrollWheelMini {
+  0% { top: 3px; opacity: 1; }
+  100% { top: 8px; opacity: 0; }
+}
+
+
+/* MAC TOOLTIP */
+.mac-tooltip {
+  position: absolute;
+  right: -290px;
+  top: 40%;
+  width: 260px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.8);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 100;
+  text-align: center;
+}
+[data-theme="dark"] .mac-tooltip {
+  background: rgba(13, 21, 37, 0.85);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+.mac-tooltip.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+.tooltip-badge {
+  display: inline-block;
+  background: var(--blue);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.mac-tooltip p {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 1.45;
+  margin: 0;
+}
+.mac-tooltip p strong {
+  color: var(--dark);
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 4px;
+}
+@media (max-width: 1100px) {
+  .mac-tooltip {
+    right: auto;
+    left: 50%;
+    top: -120px;
+    transform: translateX(-50%) translateY(20px);
+    width: 90%;
+    max-width: 320px;
+  }
+  .mac-tooltip.show {
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 /* HERO */
@@ -1594,14 +1772,14 @@ section{
 
 /* FOOTER */
 footer{
-  background:var(--dark);
+  background:var(--ice);
   padding:40px 5%;
   text-align:center;
-  border-top:1px solid rgba(255,255,255,0.05);
+  border-top:1px solid var(--border);
 }
-footer p{font-size:0.78rem;color:rgba(255,255,255,0.3);letter-spacing:1px;}
-footer a{color:var(--blue-mid);text-decoration:none;}
-footer a:hover{color:white;}
+footer p{font-size:0.78rem;color:var(--text-muted);letter-spacing:1px;}
+footer a{color:var(--blue);text-decoration:none;}
+footer a:hover{color:var(--dark);}
 
 /* SCROLL ANIMATIONS — cinematográficas */
 .reveal{
@@ -1661,7 +1839,7 @@ footer a:hover{color:white;}
   mix-blend-mode: overlay;
 }
 [data-theme="dark"] .noise-overlay {
-  opacity: 0.15;
+  opacity: 0;
 }
 
 /* 2. Custom Blue Cursor */
@@ -1733,7 +1911,8 @@ footer a:hover{color:white;}
 /* RESPONSIVE */
 @media(max-width:640px){
   nav{padding:0 4%;}
-  .nav-logo{font-size:0.95rem;}
+  .nav-logo-text{font-size:0.9rem; letter-spacing: 2px;}
+  .custom-logo{height:32px;}
   section{padding:70px 5%;}
   .mock-screen{padding:16px;}
   .mock-stats{grid-template-columns:repeat(3,1fr);}
@@ -1949,11 +2128,9 @@ footer a:hover{color:white;}
       border-bottom: 1px solid rgba(255,255,255,0.04) !important;
     }
     [data-theme="dark"] .nav-logo { color: rgba(255,255,255,0.95) !important; }
-    [data-theme="dark"] .nav-logo span {
-      background: rgba(255,255,255,0.06) !important;
-      border: 1px solid rgba(255,255,255,0.08) !important;
+    [data-theme="dark"] .custom-logo {
+      filter: none !important;
     }
-    [data-theme="dark"] .nav-logo span svg { fill: rgba(255,255,255,0.9) !important; }
     [data-theme="dark"] .nav-cta {
       background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.08)) !important;
       border-color: rgba(147,197,253,0.15) !important;
@@ -2076,22 +2253,23 @@ footer a:hover{color:white;}
 
 <nav id="navbar">
   <div class="nav-logo">
-    <span>
-      <svg viewBox="0 0 16 16"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z"/></svg>
-    </span>
-    Michel Radwan
+    <img src="logo.png" alt="Studio Radwan Logo" class="custom-logo">
+    <span class="nav-logo-text">Studio <span style="-webkit-text-fill-color: var(--blue); color: var(--blue); background: none;">Radwan</span></span>
   </div>
-  <a href="https://instagram.com/michelradwan" target="_blank" class="nav-cta">Falar no Instagram</a>
+  <a href="https://wa.me/5511932609424" target="_blank" class="nav-cta">Falar no WhatsApp</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-text-content" style="display:flex;flex-direction:column;align-items:center;z-index:2;position:relative;">
-    <div class="hero-badge">Sites Profissionais · 2026</div>
+    <div class="minimal-scroll">
+      <div class="mouse-icon"></div>
+      Role para baixo
+    </div>
     <h1>Seu negócio existe.<br>Mas o Google <em class="typewriter-text">sabe disso?</em></h1>
     <p class="hero-sub">Enquanto você serve seus clientes com todo o cuidado do mundo, seus concorrentes estão sendo encontrados por centenas de pessoas prontas para comprar. E você não aparece em lugar nenhum.</p>
     <div class="hero-actions">
-      <a href="https://instagram.com/michelradwan" target="_blank" class="btn-blue">Quero meu site agora</a>
+      <a href="https://wa.me/5511932609424" target="_blank" class="btn-blue">Quero meu site agora</a>
       <a href="#por-que" class="btn-ghost">
         Ver como funciona
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -2100,11 +2278,27 @@ footer a:hover{color:white;}
     <p class="hero-note">Entrega em até 7 dias &nbsp;·&nbsp; Sem mensalidade oculta &nbsp;·&nbsp; Suporte incluído</p>
   </div>
 
-  <!-- BROWSER MOCKUP -->
-  <div class="hero-visual">
+
+
+
+</section>
+
+<!-- BROWSER REVEAL (APPLE-STYLE ARCH) -->
+<section class="browser-reveal-section">
+  <div class="arch-container">
+    <div class="arch-content">
+      <!-- MAC TOOLTIP -->
+      <div class="mac-tooltip">
+        <span class="tooltip-badge">Demonstração</span>
+        <p><strong>Sua Nova Máquina de Vendas</strong></p>
+        <p>O layout perfeito não é apenas bonito. Ele guia a atenção do cliente e transforma visitantes casuais em pedidos instantâneos e lucro real.</p>
+      </div>
+      <!-- BROWSER MOCKUP -->
+      <div class="hero-visual">
     <div class="hero-parallax-inner" style="transform-origin: top center; transition: transform 0.1s ease-out, opacity 0.1s ease-out; position:relative; z-index:1;">
 
     <div class="browser-wrap">
+
       <!-- MAC OS BAR -->
       <div class="browser-bar">
         <div class="dots">
@@ -2196,6 +2390,8 @@ footer a:hover{color:white;}
       </div>
     </div>
 
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2738,6 +2934,60 @@ footer a:hover{color:white;}
           </div>
         </div>
 
+        <!-- Card 4: Consultoria (Human) -->
+        <div class="human-proof-card">
+          <div class="human-proof-badge" style="background: rgba(34,197,94,0.1); color: #22c55e;">Gratidão</div>
+          <div class="human-proof-quote-icon">“</div>
+          <p class="human-proof-quote-text">
+            Passando aqui só pra te agradecer, Michel. O site ficou simplesmente perfeito. Meus clientes não param de elogiar o profissionalismo e a rapidez. Foi a melhor decisão que tomei pro meu negócio esse ano.
+          </p>
+          <div class="human-proof-footer">
+            <div class="human-proof-author">
+              <div class="human-proof-avatar" style="background: rgba(34,197,94,0.1); color: #22c55e;">CE</div>
+              <div class="human-proof-meta">
+                <h4>Carlos Eduardo</h4>
+                <p>Consultoria Empresarial</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Agência (Human) -->
+        <div class="human-proof-card">
+          <div class="human-proof-badge" style="background: rgba(168,85,247,0.1); color: #a855f7;">Feedback Real</div>
+          <div class="human-proof-quote-icon">“</div>
+          <p class="human-proof-quote-text">
+            Cara, surreal. O pessoal tá achando que a minha agência tem 50 funcionários só pelo nível de sofisticação do site. Trabalho de mestre, entregue antes do prazo. Só tenho a agradecer pela parceria.
+          </p>
+          <div class="human-proof-footer">
+            <div class="human-proof-author">
+              <div class="human-proof-avatar" style="background: rgba(168,85,247,0.1); color: #a855f7;">FR</div>
+              <div class="human-proof-meta">
+                <h4>Felipe Ramos</h4>
+                <p>Agência de Marketing</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Nutricionista (Human) -->
+        <div class="human-proof-card">
+          <div class="human-proof-badge" style="background: rgba(245,158,11,0.1); color: #f59e0b;">Agradecimento</div>
+          <div class="human-proof-quote-icon">“</div>
+          <p class="human-proof-quote-text">
+            Muito obrigada pela paciência e pelo carinho com o projeto. Eu não entendia nada de site e você deixou tudo tão fácil, claro e tão lindo. Me sinto muito mais segura para captar pacientes agora!
+          </p>
+          <div class="human-proof-footer">
+            <div class="human-proof-author">
+              <div class="human-proof-avatar" style="background: rgba(245,158,11,0.1); color: #f59e0b;">AC</div>
+              <div class="human-proof-meta">
+                <h4>Ana Clara</h4>
+                <p>Nutricionista Esportiva</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     
@@ -2821,7 +3071,7 @@ footer a:hover{color:white;}
     <div class="section-label" style="justify-content:center;margin-bottom:1.5rem;">Vamos começar</div>
     <h2>Cada dia sem site é receita<br>entregue ao seu <em>concorrente.</em></h2>
     <p>Você já provou que sabe fazer o seu trabalho com excelência. Agora deixa eu cuidar de fazer o mundo inteiro descobrir isso.</p>
-    <a href="https://instagram.com/michelradwan" target="_blank" class="btn-blue">Falar com Michel agora</a>
+    <a href="https://wa.me/5511932609424" target="_blank" class="btn-blue">Falar com Michel agora</a>
     <div class="cta-features">
       <span class="cta-feat">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2848,7 +3098,7 @@ footer a:hover{color:white;}
 <div class="custom-cursor"></div>
 
 <footer>
-  <p>© 2026 · Michel Radwan · Sites Profissionais · <a href="https://instagram.com/michelradwan" target="_blank">@michelradwan</a></p>
+  <p>© 2026 · Michel Radwan · Sites Profissionais · <a href="https://wa.me/5511932609424" target="_blank">WhatsApp: (11) 93260-9424</a></p>
 </footer>
 
 <script>
@@ -2921,6 +3171,56 @@ const navbar = document.getElementById('navbar');
 window.addEventListener('scroll',()=>{
   navbar.classList.toggle('scrolled', window.scrollY>20);
 },{passive:true});
+
+// =====================
+// APPLE-STYLE ARCH REVEAL
+// =====================
+document.addEventListener('DOMContentLoaded', () => {
+  const revealSection = document.querySelector('.browser-reveal-section');
+  const archContent = document.querySelector('.arch-content');
+  const pCanvas = document.getElementById('particles-canvas');
+
+  if (revealSection && archContent) {
+    function updateArch() {
+      const rect = revealSection.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      const scrollDistance = revealSection.offsetHeight - windowHeight;
+      let progress = -rect.top / scrollDistance;
+      
+      if (progress < 0) progress = 0;
+      if (progress > 1) progress = 1;
+
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+
+      if(pCanvas) {
+         pCanvas.style.opacity = Math.max(0, 0.85 - (progress * 2));
+      }
+      
+      const tooltip = document.querySelector('.mac-tooltip');
+      if(tooltip) {
+        if(progress > 0.2) tooltip.classList.add('show');
+        else tooltip.classList.remove('show');
+      }
+
+      let opacityProgress = (progress - 0.1) / 0.4;
+      if (opacityProgress < 0) opacityProgress = 0;
+      if (opacityProgress > 1) opacityProgress = 1;
+      
+      const contentScale = 0.85 + (0.15 * easeOut);
+      const contentTy = 10 * (1 - easeOut);
+      
+      archContent.style.opacity = opacityProgress;
+      archContent.style.transform = `translateY(${contentTy}vh) scale(${contentScale})`;
+    }
+
+    window.addEventListener('scroll', () => {
+      requestAnimationFrame(updateArch);
+    }, {passive: true});
+
+    updateArch();
+  }
+});
 
 // SCROLL REVEAL — dispara mais cedo, permanece mais tempo
 const reveals = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
